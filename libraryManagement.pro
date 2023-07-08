@@ -10,6 +10,8 @@ CONFIG += c++17
 
 SOURCES += \
     administrator.cpp \
+    book.cpp \
+    datelabel.cpp \
     main.cpp \
     mysqlServer.cpp \
     student.cpp \
@@ -17,6 +19,8 @@ SOURCES += \
 
 HEADERS += \
     administrator.h \
+    book.h \
+    datelabel.h \
     mysqlServer.h \
     protocol.h \
     student.h \
@@ -24,6 +28,7 @@ HEADERS += \
 
 FORMS += \
     administrator.ui \
+    datelabel.ui \
     student.ui \
     widget.ui
 

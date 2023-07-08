@@ -7,11 +7,10 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);  
-    //MysqlServer::getInstance();
     this->setFixedSize(470,400);
     this->setWindowTitle("登录界面");
-    this->setStyleSheet("QWidget {background-color: #83cadf}");
-    this->setWindowOpacity(0.88);
+   // this->setStyleSheet("QWidget {background-color: #83cadf}");
+   // this->setWindowOpacity(0.88);
     this->beautify();
     /*QSqlQuery* query=MysqlServer::getInstance()->getQuery();
     QString strTest="select * from admin";//执行的sql查询语句

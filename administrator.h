@@ -2,7 +2,8 @@
 #define ADMINISTRATOR_H
 
 #include <QWidget>
-#include <datelabel.h>
+#include <QListWidget>
+#include <QStringList>
 namespace Ui {
 class Administrator;
 }
@@ -19,6 +20,8 @@ public:
 
 private:
     Ui::Administrator *ui;
+    void initGraph();
+    void bookGraph();
 
     unsigned id;
     QString name;
