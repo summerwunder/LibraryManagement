@@ -7,7 +7,7 @@
 #include <book.h>
 #include <QVector>
 #include <QSqlTableModel>
-
+#include <QMessageBox>
 namespace Ui {
 class Administrator;
 }
@@ -27,6 +27,11 @@ private:
     void initGraph();
     void bookGraph();
     void logGraph();
+    void queryBookFunction();//查询的槽函数
+    void queryAllBookFunction();//查询的槽函数
+    void ascBookOrderFun();//升序
+    void descBookOrderFun();//降序
+    void delBookFun(); //删除
 
     unsigned id;//工号
     QString name;//姓名
