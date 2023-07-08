@@ -29,9 +29,9 @@
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>60</x>
+       <x>20</x>
        <y>0</y>
-       <width>551</width>
+       <width>591</width>
        <height>531</height>
       </rect>
      </property>
@@ -264,92 +264,42 @@
        <height>461</height>
       </rect>
      </property>
-    </widget>
-    <widget class="QComboBox" name="comboBox">
-     <property name="geometry">
-      <rect>
-       <x>170</x>
-       <y>10</y>
-       <width>121</width>
-       <height>41</height>
-      </rect>
+     <property name="font">
+      <font>
+       <pointsize>10</pointsize>
+      </font>
      </property>
-     <item>
-      <property name="text">
-       <string>添加图书</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>更新图书</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>删除图书</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>添加读者</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>更新读者信息</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>取消读者资格</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>借阅记录</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>还书记录</string>
-      </property>
-     </item>
-     <item>
-      <property name="text">
-       <string>续借记录</string>
-      </property>
-     </item>
     </widget>
-    <widget class="QLabel" name="label_2">
+    <widget class="QPushButton" name="logUpdate">
      <property name="geometry">
       <rect>
-       <x>110</x>
-       <y>20</y>
-       <width>69</width>
-       <height>20</height>
+       <x>20</x>
+       <y>10</y>
+       <width>93</width>
+       <height>41</height>
       </rect>
      </property>
      <property name="font">
       <font>
-       <pointsize>15</pointsize>
+       <pointsize>13</pointsize>
       </font>
      </property>
      <property name="text">
-      <string>筛选</string>
+      <string>刷新</string>
      </property>
     </widget>
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>400</x>
+       <x>380</x>
        <y>0</y>
-       <width>213</width>
+       <width>221</width>
        <height>77</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
       <item>
-       <widget class="QRadioButton" name="radioButton_4">
+       <widget class="QRadioButton" name="logDesc">
         <property name="font">
          <font>
           <pointsize>14</pointsize>
@@ -361,7 +311,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QRadioButton" name="radioButton_3">
+       <widget class="QRadioButton" name="logAsc">
         <property name="font">
          <font>
           <pointsize>14</pointsize>

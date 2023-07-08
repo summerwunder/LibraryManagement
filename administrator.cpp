@@ -19,18 +19,6 @@ Administrator::Administrator(unsigned id,QString name,QWidget *parent) :
     this->id=id;
     this->name=name;
     ui->userName->setText("管理员："+this->name);
-    /*书本这块的槽函数*/
-    connect(ui->queryBookButton,&QPushButton::clicked,this,&Administrator::queryBookFunction);
-    connect(ui->queryAllBookButton,&QPushButton::clicked,this,&Administrator::queryAllBookFunction);
-    //关于排序书本
-    connect(ui->ascBookOrder,&QRadioButton::toggled,this,&Administrator::ascBookOrderFun);
-    connect(ui->descBookOrder,&QRadioButton::toggled,this,&Administrator::descBookOrderFun);
-    //删除书本
-    connect(ui->delBookButton,&QPushButton::clicked,this,&Administrator::delBookFun);
-    //插入书本
-    connect(ui->addBookButton,&QPushButton::clicked,this,&Administrator::insertBookFun);
-    //更新书本
-    connect(ui->updateBookButton,&QPushButton::clicked,this,&Administrator::updateBookFun);
 }
 
 Administrator::~Administrator()
@@ -48,21 +36,48 @@ void Administrator::bookGraph()
     ui->tableViewBook->setFixedSize(599,389);
     bookTable=new QSqlTableModel(this);
     bookTable->setTable("book_info");
+
     bookTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
     bookTable->select();
     ui->tableViewBook->setModel(bookTable);
     ui->tableViewBook->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
-
+    //设置列宽
+    ui->tableViewBook->setColumnWidth(0, 60);
+    ui->tableViewBook->setColumnWidth(1, 160);
+    ui->tableViewBook->setColumnWidth(2, 120);
+    ui->tableViewBook->setColumnWidth(3, 120);
+    ui->tableViewBook->setColumnWidth(4, 129);
+    /*书本这块的槽函数*/
+    connect(ui->queryBookButton,&QPushButton::clicked,this,&Administrator::queryBookFunction);
+    connect(ui->queryAllBookButton,&QPushButton::clicked,this,&Administrator::queryAllBookFunction);
+    //关于排序书本
+    connect(ui->ascBookOrder,&QRadioButton::toggled,this,&Administrator::ascBookOrderFun);
+    connect(ui->descBookOrder,&QRadioButton::toggled,this,&Administrator::descBookOrderFun);
+    //删除书本
+    connect(ui->delBookButton,&QPushButton::clicked,this,&Administrator::delBookFun);
+    //插入书本
+    connect(ui->addBookButton,&QPushButton::clicked,this,&Administrator::insertBookFun);
+    //更新书本
+    connect(ui->updateBookButton,&QPushButton::clicked,this,&Administrator::updateBookFun);
 }
 
 void Administrator::logGraph()
 {
     ui->tableViewLog->setFixedSize(599,389);
     logTable=new QSqlTableModel(this);
+    logModel = new QSqlQueryModel;
     logTable->setTable("log");
     logTable->select();
     ui->tableViewLog->setModel(logTable);
     ui->tableViewLog->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
+    ui->tableViewLog->setColumnWidth(0, 45);
+    ui->tableViewLog->setColumnWidth(1, 166);
+    ui->tableViewLog->setColumnWidth(2, 380);
+    //关于排序日志
+    connect(ui->logAsc,&QRadioButton::toggled,this,&Administrator::ascLogOrderFun);
+    connect(ui->logDesc,&QRadioButton::toggled,this,&Administrator::descLogOrderFun);
+    //刷新
+    connect(ui->logUpdate,&QPushButton::clicked,this,&Administrator::descLogOrderFun);//其实就是重新输出
 }
 
 /*
@@ -193,4 +208,16 @@ void Administrator::updateBookFun()
     bookTable->setData(bookTable->index(rowNum,2),ui->authorEdit->text());
     bookTable->setData(bookTable->index(rowNum,3),ui->publisherEdit->text());
     bookTable->setData(bookTable->index(rowNum,4),QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+}
+
+void Administrator::ascLogOrderFun()
+{
+    logModel->setQuery("select * from log ORDER BY log_time ASC");
+    ui->tableViewLog->setModel(logModel);
+}
+
+void Administrator::descLogOrderFun()
+{
+    logModel->setQuery("select * from log ORDER BY log_time DESC");
+    ui->tableViewLog->setModel(logModel);
 }

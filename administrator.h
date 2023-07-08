@@ -9,6 +9,8 @@
 #include <QVector>
 #include <QSqlTableModel>
 #include <QMessageBox>
+#include <QSqlQueryModel>
+
 namespace Ui {
 class Administrator;
 }
@@ -36,10 +38,15 @@ private:
     void delBookFun(); //删除
     void insertBookFun();//插入
     void updateBookFun();//更新
+    //对日志操作
+    void ascLogOrderFun();//升序
+    void descLogOrderFun();//降序
+
 
     unsigned id;//工号
     QString name;//姓名
     QSqlTableModel* bookTable;
+    QSqlQueryModel *logModel;
     QSqlTableModel* logTable;
 };
 
