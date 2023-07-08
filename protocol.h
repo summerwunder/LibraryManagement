@@ -1,6 +1,7 @@
 #ifndef PROTOCOL_H
 #define PROTOCOL_H
 
+#define DRIVER "QODBC"
 #define DATABASE "LibraryManagement"
 #define USER "root"
 #define PORT 3306

@@ -2,7 +2,7 @@
 MysqlServer::MysqlServer()
 {
     // 数据库对象创建
-    this->db = QSqlDatabase::addDatabase("QODBC");
+    this->db = QSqlDatabase::addDatabase(DRIVER);
     // 设置相关参数
     db.setHostName(ADDRESS); // 主机名(地址)
     db.setPort(PORT); // 端口

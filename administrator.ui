@@ -254,6 +254,7 @@
      </layout>
     </widget>
    </widget>
+   <widget class="QWidget" name="page_3"/>
    <widget class="QWidget" name="page_2">
     <widget class="QTableView" name="tableViewLog">
      <property name="geometry">
