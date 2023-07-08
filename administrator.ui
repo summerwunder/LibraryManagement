@@ -26,20 +26,7 @@
     <number>0</number>
    </property>
    <widget class="QWidget" name="page">
-    <widget class="QLabel" name="label_7">
-     <property name="geometry">
-      <rect>
-       <x>230</x>
-       <y>40</y>
-       <width>69</width>
-       <height>20</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string/>
-     </property>
-    </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>60</x>
@@ -50,7 +37,10 @@
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_4">
       <item>
-       <layout class="QHBoxLayout" name="horizontalLayout_6">
+       <layout class="QHBoxLayout" name="horizontalLayout_6" stretch="0,0,10">
+        <property name="spacing">
+         <number>10</number>
+        </property>
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
@@ -220,7 +210,7 @@
          </layout>
         </item>
         <item>
-         <layout class="QVBoxLayout" name="verticalLayout_2">
+         <layout class="QVBoxLayout" name="verticalLayout_2" stretch="0,0">
           <item>
            <widget class="QRadioButton" name="ascBookOrder">
             <property name="font">
@@ -348,13 +338,13 @@
       <string>筛选</string>
      </property>
     </widget>
-    <widget class="QWidget" name="">
+    <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
        <x>400</x>
        <y>0</y>
-       <width>174</width>
-       <height>67</height>
+       <width>213</width>
+       <height>77</height>
       </rect>
      </property>
      <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -392,10 +382,10 @@
      <x>12</x>
      <y>14</y>
      <width>751</width>
-     <height>45</height>
+     <height>55</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,0,0,0,1">
+   <layout class="QHBoxLayout" name="horizontalLayout" stretch="2,3,0,0,1">
     <item>
      <spacer name="horizontalSpacer">
       <property name="orientation">
@@ -426,7 +416,7 @@
      <widget class="QLabel" name="userName">
       <property name="font">
        <font>
-        <pointsize>12</pointsize>
+        <pointsize>10</pointsize>
        </font>
       </property>
       <property name="text">
@@ -448,7 +438,15 @@
      </spacer>
     </item>
     <item>
-     <widget class="dateLabel" name="widget" native="true"/>
+     <widget class="dateLabel" name="widget" native="true">
+      <property name="font">
+       <font>
+        <family>Kristen ITC</family>
+        <pointsize>10</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>
