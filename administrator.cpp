@@ -13,11 +13,13 @@ Administrator::Administrator(unsigned id,QString name,QWidget *parent) :
 
     ui->setupUi(this);
     this->show();
-    this->setFixedSize(799,657);
     this->bookGraph();
+    this->logGraph();
     this->id=id;
     this->name=name;
     ui->userName->setText("用户："+this->name);
+
+
 
 }
 
@@ -28,22 +30,29 @@ Administrator::~Administrator()
 
 void Administrator::initGraph()
 {
-
+    this->setFixedSize(799,657);
 }
 
 void Administrator::bookGraph()
 {
-    ui->tableWidget->setRowCount(15);
-    ui->tableWidget->setColumnCount(5);
-    QStringList listBuff;
-    listBuff<<"ISBN";
-    listBuff<<"书名";
-    listBuff<<"作者";
-    listBuff<<"出版社";
-    listBuff<<"书本添加时间";
-    // 设置对应的表头信息
-    ui->tableWidget->setHorizontalHeaderLabels(listBuff);
-    // 表头自由变化
-    ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+    ui->tableViewBook->setFixedSize(599,389);
+    bookTable=new QSqlTableModel(this);
+    bookTable->setTable("book_info");
+    bookTable->setEditStrategy(QSqlTableModel::OnManualSubmit);//手动更新
+    bookTable->select();
+    ui->tableViewBook->setModel(bookTable);
+    ui->tableViewBook->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
 
+
+}
+
+void Administrator::logGraph()
+{
+    ui->tableViewLog->setFixedSize(599,389);
+    logTable=new QSqlTableModel(this);
+    logTable->setTable("log");
+    logTable->setEditStrategy(QSqlTableModel::OnManualSubmit);//手动更新
+    logTable->select();
+    ui->tableViewLog->setModel(logTable);
+    ui->tableViewLog->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
 }
