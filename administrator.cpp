@@ -16,6 +16,7 @@ Administrator::Administrator(unsigned id,QString name,QWidget *parent) :
     this->initGraph();
     this->bookGraph();
     this->logGraph();
+    this->stuGraph();
     this->id=id;
     this->name=name;
     ui->userName->setText("管理员："+this->name);
@@ -69,6 +70,7 @@ void Administrator::logGraph()
     logTable->setTable("log");
     logTable->select();
     ui->tableViewLog->setModel(logTable);
+     bookTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
     ui->tableViewLog->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
     ui->tableViewLog->setColumnWidth(0, 45);
     ui->tableViewLog->setColumnWidth(1, 166);
@@ -78,6 +80,27 @@ void Administrator::logGraph()
     connect(ui->logDesc,&QRadioButton::toggled,this,&Administrator::descLogOrderFun);
     //刷新
     connect(ui->logUpdate,&QPushButton::clicked,this,&Administrator::descLogOrderFun);//其实就是重新输出
+}
+
+void Administrator::stuGraph()
+{
+    ui->tableViewLog->setFixedSize(600,411);
+    stuTable=new QSqlTableModel(this);
+    stuModel = new QSqlQueryModel;
+    stuTable->setTable("stu");
+    stuTable->select();
+    ui->tableViewStu->setModel(stuTable);
+    bookTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
+    ui->tableViewStu->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
+    this->stuTable->removeColumn(7);//用户名
+    this->stuTable->removeColumn(8);//密码
+    ui->tableViewStu->setColumnWidth(0, 40);   // ID
+    ui->tableViewStu->setColumnWidth(1, 80);   // 姓名
+    ui->tableViewStu->setColumnWidth(2, 70);   // 性别
+    ui->tableViewStu->setColumnWidth(3, 110);  // 电话号码
+    ui->tableViewStu->setColumnWidth(4, 100);   // 借阅数量
+    ui->tableViewStu->setColumnWidth(5, 100);   // 阅读量
+    ui->tableViewStu->setColumnWidth(6, 100);   // 违规次数
 }
 
 /*

@@ -30,6 +30,7 @@ private:
     void initGraph();
     void bookGraph();
     void logGraph();
+    void stuGraph();
     //图书操作
     void queryBookFunction();//查询的槽函数
     void queryAllBookFunction();//查询的槽函数
@@ -41,13 +42,18 @@ private:
     //对日志操作
     void ascLogOrderFun();//升序
     void descLogOrderFun();//降序
-
+    //对学生操作
+    void
 
     unsigned id;//工号
     QString name;//姓名
     QSqlTableModel* bookTable;
+
     QSqlQueryModel *logModel;
     QSqlTableModel* logTable;
+
+    QSqlTableModel* stuTable;
+    QSqlQueryModel *stuModel;
 };
 
 #endif // ADMINISTRATOR_H
