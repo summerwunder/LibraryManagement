@@ -101,6 +101,8 @@ void Administrator::stuGraph()
     ui->tableViewStu->setColumnWidth(4, 100);   // 借阅数量
     ui->tableViewStu->setColumnWidth(5, 100);   // 阅读量
     ui->tableViewStu->setColumnWidth(6, 100);   // 违规次数
+
+    connect(ui->addStuButton,&QPushButton::clicked,this,&Administrator::addStuFun);
 }
 
 /*
@@ -243,4 +245,49 @@ void Administrator::descLogOrderFun()
 {
     logModel->setQuery("select * from log ORDER BY log_time DESC");
     ui->tableViewLog->setModel(logModel);
+}
+
+void Administrator::addStuFun()
+{
+    AddStuDialog dialog(this);
+    dialog.setWindowTitle("添加学生");
+
+    if (dialog.exec() == QDialog::Accepted) {
+        int id = dialog.getId();
+        QString name = dialog.getName();
+        QString gender = dialog.getGender();
+        QString tele = dialog.getTele();
+        QString username = dialog.getUsrName();
+        QString password = dialog.getPassWord();
+        if (name.isEmpty() || gender==nullptr || tele.isEmpty() || username.isEmpty() || password.isEmpty())
+        {
+             QMessageBox::warning(this, "错误", "请填写所有必填字段");
+             return;
+        }
+        // 先检查学生是否已存在
+        MysqlServer::getInstance()->getQuery()->prepare("SELECT * FROM stu WHERE id = :id");
+        MysqlServer::getInstance()->getQuery()->bindValue(":id", id);
+        MysqlServer::getInstance()->getQuery()->exec();
+        if (MysqlServer::getInstance()->getQuery()->next())
+        {
+            QMessageBox::warning(this, "错误", "插入学生ID不能相同");
+            return;
+        }
+
+        // 执行插入操作
+        int rowNum = stuTable->rowCount();
+        stuTable->insertRow(rowNum);
+        stuTable->setData(stuTable->index(rowNum, 0), id);
+        stuTable->setData(stuTable->index(rowNum, 1), name);
+        stuTable->setData(stuTable->index(rowNum, 2), gender);
+        stuTable->setData(stuTable->index(rowNum, 3), tele);
+        stuTable->setData(stuTable->index(rowNum, 4), 0);  // 借阅数量初始化为0
+        stuTable->setData(stuTable->index(rowNum, 5), 0);  // 阅读量初始化为0
+        stuTable->setData(stuTable->index(rowNum, 6), 0);  // 违规次数初始化为0
+        stuTable->setData(stuTable->index(rowNum, 7), username);
+        stuTable->setData(stuTable->index(rowNum, 8), password);
+
+        // 提交改动
+        stuTable->submitAll();
+    }
 }

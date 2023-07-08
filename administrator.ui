@@ -268,25 +268,40 @@
     <widget class="QWidget" name="">
      <property name="geometry">
       <rect>
-       <x>190</x>
-       <y>10</y>
-       <width>381</width>
-       <height>111</height>
+       <x>30</x>
+       <y>20</y>
+       <width>81</width>
+       <height>101</height>
       </rect>
      </property>
-     <layout class="QGridLayout" name="gridLayout">
-      <item row="1" column="0">
-       <widget class="QPushButton" name="delStuButton">
+     <layout class="QVBoxLayout" name="verticalLayout_6">
+      <item>
+       <widget class="QLabel" name="label_2">
         <property name="font">
          <font>
-          <pointsize>12</pointsize>
+          <pointsize>15</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>删除读者</string>
+         <string>读者号</string>
         </property>
        </widget>
       </item>
+      <item>
+       <widget class="QSpinBox" name="idSpinBox"/>
+      </item>
+     </layout>
+    </widget>
+    <widget class="QWidget" name="">
+     <property name="geometry">
+      <rect>
+       <x>191</x>
+       <y>21</y>
+       <width>401</width>
+       <height>101</height>
+      </rect>
+     </property>
+     <layout class="QGridLayout" name="gridLayout">
       <item row="0" column="0">
        <widget class="QPushButton" name="addStuButton">
         <property name="font">
@@ -335,6 +350,18 @@
         </property>
        </widget>
       </item>
+      <item row="1" column="0">
+       <widget class="QPushButton" name="delStuButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>删除读者</string>
+        </property>
+       </widget>
+      </item>
       <item row="1" column="1">
        <widget class="QPushButton" name="queryStuButton">
         <property name="font">
@@ -346,33 +373,6 @@
          <string>查询读者借书信息</string>
         </property>
        </widget>
-      </item>
-     </layout>
-    </widget>
-    <widget class="QWidget" name="">
-     <property name="geometry">
-      <rect>
-       <x>30</x>
-       <y>20</y>
-       <width>81</width>
-       <height>101</height>
-      </rect>
-     </property>
-     <layout class="QVBoxLayout" name="verticalLayout_6">
-      <item>
-       <widget class="QLabel" name="label_2">
-        <property name="font">
-         <font>
-          <pointsize>15</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>读者号</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QSpinBox" name="idSpinBox"/>
       </item>
      </layout>
     </widget>

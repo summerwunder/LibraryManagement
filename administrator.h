@@ -10,7 +10,7 @@
 #include <QSqlTableModel>
 #include <QMessageBox>
 #include <QSqlQueryModel>
-
+#include <addstudialog.h>
 namespace Ui {
 class Administrator;
 }
@@ -43,7 +43,10 @@ private:
     void ascLogOrderFun();//升序
     void descLogOrderFun();//降序
     //对学生操作
-    void
+    void queryStuFun();//查询学生借阅信息
+    void addStuFun();
+    void delStuFun();
+    void updateStuFun();
 
     unsigned id;//工号
     QString name;//姓名
