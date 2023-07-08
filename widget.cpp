@@ -1,15 +1,91 @@
 #include "widget.h"
 #include "ui_widget.h"
 
+
 Widget::Widget(QWidget *parent)
     : QWidget(parent)
     , ui(new Ui::Widget)
 {
-    ui->setupUi(this);
+    ui->setupUi(this);  
+    //MysqlServer::getInstance();
+    this->setFixedSize(470,400);
+    this->setWindowTitle("登录界面");
+    this->setStyleSheet("QWidget {background-color: #83cadf}");
+    this->setWindowOpacity(0.88);
+    this->beautify();
+    /*QSqlQuery* query=MysqlServer::getInstance()->getQuery();
+    QString strTest="select * from admin";//执行的sql查询语句
+    while(query->next())
+    {
+        int id=query->value(0).toInt();
+        qDebug()<<id;
+    }
+ });*/
+
+    connect(ui->exitButton,&QPushButton::clicked,[this](){
+       this->close();
+    });
+    connect(ui->loginButton,&QPushButton::clicked,this,&Widget::clicked_on_loginButton);
 }
 
 Widget::~Widget()
 {
     delete ui;
+    MysqlServer::getInstance()->getDb().close();//关闭数据库
+}
+
+Widget::beautify()
+{
+    //对输入文本美化
+    ui->userNameEdit->setPlaceholderText("请输入您的账号");
+    ui->passwordEdit->setPlaceholderText("请输入您的密码");
+    ui->passwordEdit->setEchoMode(QLineEdit::Password);
+    //对按钮美化
+    //ui->loginButton->setStyleSheet("QPushButton:pressed { background-color: #d4ecf4; }");
+    //ui->exitButton->setStyleSheet("QPushButton:pressed { background-color: #d4ecf4; }");
+}
+
+void Widget::clicked_on_loginButton()
+{
+    QSqlQuery *query=MysqlServer::getInstance()->getQuery();
+    QString strLogin=ui->userNameEdit->text();
+    QString strPassword=ui->passwordEdit->text();
+    QString strUser;
+    if(ui->adminButton->isChecked()) strUser="admin";
+    else if(ui->readerButton->isChecked()) strUser="stu";
+
+    QString strTest="select * from "+strUser+" where username=:username";//执行的sql查询语句
+    query->prepare(strTest);
+    query->bindValue(":username",strLogin);
+    query->exec();
+    while(query->next())
+    {
+        if(ui->adminButton->isChecked())//说明是管理
+        {
+             QString password= query->value(3).toString();
+             if(password==strPassword)
+             {
+                 unsigned id=query->value(0).toUInt();
+                 QString name=query->value(1).toString();
+                 QMessageBox::information(this,"info","欢迎管理员登录");
+                 this->hide();
+                 Administrator* admin=new Administrator(id,name);
+
+             }else{
+                 QMessageBox::warning(this,"警告","您的密码输入有误");
+                 ui->passwordEdit->clear();
+             }
+        }else{          //读者
+             QString password= query->value(8).toString();
+             if(password==strPassword)
+             {
+                  QMessageBox::information(this,"info","欢迎读者登录");
+             }else{
+                 QMessageBox::warning(this,"警告","您的密码输入有误");
+                 ui->passwordEdit->clear();
+             }
+        }
+    }
+    //QMessageBox::warning(this,"警告","您的账号输入有误");
 }
 

@@ -2,7 +2,13 @@
 #define WIDGET_H
 
 #include <QWidget>
-
+#include <QSqlDatabase>
+#include <QDebug>
+#include <QMessageBox>
+#include <protocol.h>
+#include <mysqlServer.h>
+#include <administrator.h>
+#include <student.h>
 QT_BEGIN_NAMESPACE
 namespace Ui { class Widget; }
 QT_END_NAMESPACE
@@ -15,7 +21,11 @@ public:
     Widget(QWidget *parent = nullptr);
     ~Widget();
 
+
 private:
     Ui::Widget *ui;
+    beautify();
+private slots:
+    void clicked_on_loginButton();
 };
 #endif // WIDGET_H
