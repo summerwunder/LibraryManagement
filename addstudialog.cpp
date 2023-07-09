@@ -50,3 +50,27 @@ QString AddStuDialog::getPassWord()
 {
     return ui->passwordEdit->text();
 }
+
+void AddStuDialog::setInitData(int originId,QString originalUsername,QString originalPassword)
+{
+    // 设置学生初始信息在对话框中的初始值
+    ui->idSpinBox->setValue(originId);
+    ui->usernameEdit->setText(originalUsername);
+    ui->passwordEdit->setText(originalPassword);
+
+    // 将学号和用户名密码设置为不可编辑
+    ui->idSpinBox->setReadOnly(true);
+    ui->usernameEdit->setReadOnly(true);
+    ui->passwordEdit->setReadOnly(true);
+}
+
+bool AddStuDialog::isGenderEmpty()
+{
+    bool isMaleSelected = ui->maleButton->isChecked();
+    bool isFemaleSelected = ui->femaleButton->isChecked();
+    if (!isMaleSelected && !isFemaleSelected)
+        return true;
+    return false;
+}
+
+

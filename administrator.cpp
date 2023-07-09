@@ -10,7 +10,6 @@ Administrator::Administrator(unsigned id,QString name,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Administrator)
 {
-
     ui->setupUi(this);
     this->show();
     this->initGraph();
@@ -103,8 +102,19 @@ void Administrator::stuGraph()
     ui->tableViewStu->setColumnWidth(6, 100);   // 违规次数
     ui->tableViewStu->setColumnWidth(7, 0);   // 用户名
     ui->tableViewStu->setColumnWidth(8, 0);   //密码不显示
+    // 修改字段名
+    stuTable->setHeaderData(0, Qt::Horizontal, "学号");
+    stuTable->setHeaderData(1, Qt::Horizontal, "姓名");
+    stuTable->setHeaderData(2, Qt::Horizontal, "性别");
+    stuTable->setHeaderData(3, Qt::Horizontal, "电话号码");
+    stuTable->setHeaderData(4, Qt::Horizontal, "借阅数量");
+    stuTable->setHeaderData(5, Qt::Horizontal, "阅读量");
+    stuTable->setHeaderData(6, Qt::Horizontal, "违规次数");
+
+    ui->tableViewStu->setModel(stuTable);
 
     connect(ui->addStuButton,&QPushButton::clicked,this,&Administrator::addStuFun);
+    connect(ui->updateStuButton,&QPushButton::clicked,this,&Administrator::updateStuFun);
 }
 
 /*
@@ -291,5 +301,53 @@ void Administrator::addStuFun()
 
         // 提交改动
         stuTable->submitAll();
+    }
+}
+
+void Administrator::delStuFun()
+{
+
+}
+/*
+ * 管理员更新时无权限更改用户的id和账号密码
+ *
+ *
+ */
+void Administrator::updateStuFun()
+{
+    AddStuDialog dialog(this);
+    dialog.setWindowTitle("更新学生");
+    int row = ui->tableViewStu->currentIndex().row();
+    if (row < 0)
+    {
+       QMessageBox::information(this, "提示", "请先选中一个学生");
+       return;
+    }
+    int id = stuTable->data(stuTable->index(row, 0)).toInt();
+    QString username = stuTable->data(stuTable->index(row, 7)).toString();
+    QString password = stuTable->data(stuTable->index(row, 8)).toString();
+    dialog.setInitData(id, username, password);
+    if (dialog.exec() == QDialog::Accepted)
+    {
+       if (dialog.getName().isEmpty() ||dialog.isGenderEmpty()||dialog.getTele().isEmpty())
+       {
+          QMessageBox::warning(this, "错误", "字段不能为空");
+          return;
+       }
+       // 执行更新操作
+       QSqlQuery* query=MysqlServer::getInstance()->getQuery();
+       query->prepare("update stu set name = :name, gender = :gender, tel = :tele where id = :id");
+       query->bindValue(":name", dialog.getName());
+       query->bindValue(":gender",dialog.getGender());
+       query->bindValue(":tele",dialog.getTele());
+       query->bindValue(":id", id);
+       if (query->exec())
+       {
+           QMessageBox::information(this, "成功", "学生信息已更新");
+           stuTable->select();
+       } else {
+           QMessageBox::warning(this, "错误", "无法更新学生信息：" );
+           qDebug()<< query->lastError().text();
+       }
     }
 }

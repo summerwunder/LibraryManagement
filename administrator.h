@@ -48,6 +48,7 @@ private:
     void delStuFun();
     void updateStuFun();
 
+
     unsigned id;//工号
     QString name;//姓名
     QSqlTableModel* bookTable;
