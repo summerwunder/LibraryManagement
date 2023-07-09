@@ -25,6 +25,7 @@ public:
 private:
     Ui::Widget *ui;
     beautify();
+    bool isEmpty();
 private slots:
     void clicked_on_loginButton();
 };

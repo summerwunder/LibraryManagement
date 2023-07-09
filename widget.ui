@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="loginButton">
    <property name="geometry">
     <rect>
-     <x>70</x>
-     <y>260</y>
+     <x>80</x>
+     <y>300</y>
      <width>93</width>
      <height>51</height>
     </rect>
@@ -29,8 +29,8 @@
   <widget class="QPushButton" name="exitButton">
    <property name="geometry">
     <rect>
-     <x>270</x>
-     <y>260</y>
+     <x>260</x>
+     <y>300</y>
      <width>93</width>
      <height>51</height>
     </rect>
@@ -42,7 +42,7 @@
   <widget class="QLabel" name="loginLabel">
    <property name="geometry">
     <rect>
-     <x>180</x>
+     <x>150</x>
      <y>0</y>
      <width>191</width>
      <height>91</height>
@@ -54,16 +54,16 @@
     </font>
    </property>
    <property name="text">
-    <string>登录</string>
+    <string>登       录</string>
    </property>
   </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>80</y>
+     <y>73</y>
      <width>411</width>
-     <height>164</height>
+     <height>211</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -73,6 +73,7 @@
        <widget class="QLabel" name="label">
         <property name="font">
          <font>
+          <family>幼圆</family>
           <pointsize>20</pointsize>
          </font>
         </property>
@@ -98,6 +99,7 @@
        <widget class="QLabel" name="label_2">
         <property name="font">
          <font>
+          <family>幼圆</family>
           <pointsize>20</pointsize>
          </font>
         </property>
@@ -118,11 +120,12 @@
      </layout>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout_3">
+     <layout class="QHBoxLayout" name="horizontalLayout_3" stretch="0,2,0,5,0">
       <item>
        <widget class="QLabel" name="label_3">
         <property name="font">
          <font>
+          <family>幼圆</family>
           <pointsize>20</pointsize>
          </font>
         </property>
@@ -148,6 +151,7 @@
        <widget class="QRadioButton" name="readerButton">
         <property name="font">
          <font>
+          <family>华文中宋</family>
           <pointsize>20</pointsize>
          </font>
         </property>
@@ -173,6 +177,7 @@
        <widget class="QRadioButton" name="adminButton">
         <property name="font">
          <font>
+          <family>华文中宋</family>
           <pointsize>20</pointsize>
          </font>
         </property>

@@ -12,15 +12,6 @@ Widget::Widget(QWidget *parent)
    // this->setStyleSheet("QWidget {background-color: #83cadf}");
    // this->setWindowOpacity(0.88);
     this->beautify();
-    /*QSqlQuery* query=MysqlServer::getInstance()->getQuery();
-    QString strTest="select * from admin";//执行的sql查询语句
-    while(query->next())
-    {
-        int id=query->value(0).toInt();
-        qDebug()<<id;
-    }
- });*/
-
     connect(ui->exitButton,&QPushButton::clicked,[this](){
        this->close();
     });
@@ -44,8 +35,25 @@ Widget::beautify()
     //ui->exitButton->setStyleSheet("QPushButton:pressed { background-color: #d4ecf4; }");
 }
 
+bool Widget::isEmpty()
+{
+    if(ui->userNameEdit->text().isEmpty()||ui->passwordEdit->text().isEmpty())
+    {
+        QMessageBox::warning(this,"警告","你有未输入的字段");
+        return true;
+    }
+    if(!ui->readerButton->isChecked()&&!ui->adminButton->isChecked())
+    {
+        QMessageBox::warning(this,"警告","请选择你的身份");
+        return true;
+    }
+    return false;
+}
+
 void Widget::clicked_on_loginButton()
 {
+    if(this->isEmpty())
+        return ;
     QSqlQuery *query=MysqlServer::getInstance()->getQuery();
     QString strLogin=ui->userNameEdit->text();
     QString strPassword=ui->passwordEdit->text();
@@ -85,6 +93,6 @@ void Widget::clicked_on_loginButton()
              }
         }
     }
-    //QMessageBox::warning(this,"警告","您的账号输入有误");
+    QMessageBox::warning(this,"警告","您的账号输入有误");
 }
 
