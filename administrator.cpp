@@ -92,8 +92,8 @@ void Administrator::stuGraph()
     ui->tableViewStu->setModel(stuTable);
     bookTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
     ui->tableViewStu->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
-    this->stuTable->removeColumn(7);//用户名
-    this->stuTable->removeColumn(8);//密码
+    //this->stuTable->removeColumn(7);//用户名
+    //this->stuTable->removeColumn(7);//密码
     ui->tableViewStu->setColumnWidth(0, 40);   // ID
     ui->tableViewStu->setColumnWidth(1, 80);   // 姓名
     ui->tableViewStu->setColumnWidth(2, 70);   // 性别
@@ -101,6 +101,8 @@ void Administrator::stuGraph()
     ui->tableViewStu->setColumnWidth(4, 100);   // 借阅数量
     ui->tableViewStu->setColumnWidth(5, 100);   // 阅读量
     ui->tableViewStu->setColumnWidth(6, 100);   // 违规次数
+    ui->tableViewStu->setColumnWidth(7, 0);   // 用户名
+    ui->tableViewStu->setColumnWidth(8, 0);   //密码不显示
 
     connect(ui->addStuButton,&QPushButton::clicked,this,&Administrator::addStuFun);
 }
