@@ -39,20 +39,13 @@ create table book_record(
     constraint fk_book_id foreign key (book_id) references book_info(isbn)
 );
 
-create table star_book(
-    id int primary key auto_increment,
-    book_id int not null,
-    estimate_num int unsigned not null,
-    star double default null,
-    constraint fk_star foreign key (book_id) references book_info(isbn)
-);
-
 create table log(
     id int primary key auto_increment,
     log_time datetime,
     event varchar(50) not null
 );
 
+#自动加入借书日志的
 delimiter ##
 create trigger trigger_record_book after insert on book_record for each row
     begin
@@ -61,6 +54,41 @@ create trigger trigger_record_book after insert on book_record for each row
     end;
 ##
 delimiter ;
+drop trigger  trigger_record_book;
+
+drop trigger trigger_return_book;
+#自动添加读者日志
+create trigger trigger_add_stu after insert on stu for each row
+    begin
+        INSERT INTO log VALUES (NULL, NOW(), CONCAT('id号为',new.id,'的读者',new.name,'被添加了'));
+    end;
+#自动删除读者日志
+create trigger trigger_del_stu after delete on stu for each row
+    begin
+        INSERT INTO log VALUES (NULL, NOW(), CONCAT('id号为',old.id,'的读者',old.name,'资格被取消了'));
+    end;
+#自动更新读者日志
+create trigger trigger_update_stu after update on stu for each row
+    begin
+        if (new.name<>old.name or new.tel<>old.tel or new.gender<>old.gender ) then
+             INSERT INTO log VALUES (NULL, NOW(), CONCAT('id号为',old.id,'的读者',old.name,'信息被更新了'));
+        end if;
+    end;
+#自动添加书本日志
+create trigger trigger_add_book after insert on book_info for each row
+    begin
+        INSERT INTO log VALUES (NULL, NOW(), CONCAT('isbn号为',new.isbn,'的书本',new.name,'被添加了'));
+    end;
+#自动删除书本日志
+create trigger trigger_delete_book after delete on book_info for each row
+    begin
+        INSERT INTO log VALUES (NULL, NOW(), CONCAT('isbn号为',old.isbn,'的书本',old.name,'被删除了'));
+    end;
+#自动更新书本日志
+create trigger trigger_update_book after update on book_info for each row
+    begin
+        INSERT INTO log VALUES (NULL, NOW(), CONCAT('isbn号为',old.isbn,'的书本',old.name,'被更新了'));
+    end;
 
 delimiter ##
 create trigger trigger_return_book after update on book_record for each row
@@ -75,22 +103,26 @@ create trigger trigger_return_book after update on book_record for each row
 ##
 delimiter ;
 
+#时间调度事件
 delimiter $$
 create event check_over_books
 on schedule every 1 minute
 starts now()
 do
     begin
+        #声明变量
         declare done int default 0;
         declare stu_id_use int ;
         declare book_id_use int ;
 
+        #声明游标,检索所有未还书
         declare cur cursor for
             select book_id,stu_id from book_record where backTime<now() and isOver=0;
+        #检索完就设为1退出
         declare continue handler for not found set done=1;
-
+        #打开游标
         open cur;
-
+        #读取数据
         read_data:LOOP
             fetch cur into book_id_use,stu_id_use;
             if done=1 then
@@ -98,10 +130,37 @@ do
             end if;
             update book_record set isOver=1 where book_id=book_record.book_id and stu_id=book_record.stu_id;
             insert into log values(null,now(),concat('书号为', book_id_use, '的书已经到期，借书学生ID为', stu_id_use));
-            update stu set stu.defy_num=stu.defy_num+1;
+            update stu set stu.defy_num=stu.defy_num+1 ,stu.borrow_num=stu.borrow_num-1;
         end loop read_data;
-
         close cur;
         set done=0;
     end$$
 delimiter ;
+
+#视图1
+create VIEW book_record_view AS
+select b.name, r.recordTime, r.backTime, s.id AS stu_id
+from book_info AS b
+inner join book_record AS r ON b.isbn = r.book_id
+inner join stu AS s ON r.stu_id = s.id
+where r.isOver = 0;
+
+#视图2
+create view book_view as
+select b.isbn, b.name, b.author, b.publisher,
+       case
+           when r.id IS NULL then '未被借阅'
+           else '已被借阅'
+        end AS status
+from book_info b
+left join (
+  select book_id, MAX(id) as max_id
+  from book_record
+  where isOver = 0
+  group by book_id
+) as latest on b.isbn = latest.book_id
+left join book_record r on latest.book_id = r.book_id and latest.max_id = r.id;
+
+#视图3
+create view stuRating as
+    select stu.name,stu.gender,stu.bookRead_num from stu;
