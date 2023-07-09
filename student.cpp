@@ -51,14 +51,18 @@ void Student::initGraph()
 
 void Student::initEdit()
 {
+    infoTable=new QSqlTableModel;
+    infoTable->setTable("stu");
+    infoTable->setFilter(QString("id=%1").arg(this->id));
+    infoTable->select();
     QString text;
-    text += "学号: " + QString::number(id) + "\n";
-    text += "姓名: " + name + "\n";
-    text += "性别: " + gender + "\n";
-    text += "电话号码: " + tel + "\n";
-    text += "正在借阅的书籍数目: " + QString::number(borrowNum) + "\n";
-    text += "已经借阅的书籍数目: " + QString::number(bookReadNum) + "\n";
-    text += "违规次数: " + QString::number(defyNum) + "\n";
+    text += "学号: " + infoTable->data(infoTable->index(0,0)).toString()+ "\n";
+    text += "姓名: " + infoTable->data(infoTable->index(0,1)).toString()+ "\n";
+    text += "性别: " + infoTable->data(infoTable->index(0,2)).toString() + "\n";
+    text += "电话号码: " + infoTable->data(infoTable->index(0,3)).toString()+ "\n";
+    text += "正在借阅的书籍数目: " + infoTable->data(infoTable->index(0,4)).toString() + "\n";
+    text += "已经借阅的书籍数目: " + infoTable->data(infoTable->index(0,5)).toString() + "\n";
+    text += "违规次数: " + infoTable->data(infoTable->index(0,6)).toString() + "\n";
 
     ui->infoText->setPlainText(text);
     ui->infoText->setFont(QFont(QString("黑体"),14));
@@ -95,6 +99,7 @@ void Student::borrowBook()
     {
         QMessageBox::information(this,"提示","借阅成功");
         this->myTable->select();
+        this->initEdit();
         return;
     }
 }
@@ -156,6 +161,8 @@ void Student::returnBook()
     {
         myTable->select();
         QMessageBox::information(this,"提示","归还成功");
+        this->mainTable->select();
+        this->initEdit();
     }else{
         qDebug()<<"失败";
     }
