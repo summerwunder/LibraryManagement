@@ -25,7 +25,7 @@
    <property name="currentIndex">
     <number>2</number>
    </property>
-   <widget class="QWidget" name="page">
+   <widget class="QWidget" name="pageBook">
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
@@ -254,7 +254,7 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_3">
+   <widget class="QWidget" name="pageStu">
     <widget class="QTableView" name="tableViewStu">
      <property name="geometry">
       <rect>
@@ -350,7 +350,7 @@
      </layout>
     </widget>
    </widget>
-   <widget class="QWidget" name="page_2">
+   <widget class="QWidget" name="pageLog">
     <widget class="QTableView" name="tableViewLog">
      <property name="geometry">
       <rect>
@@ -370,7 +370,7 @@
      <property name="geometry">
       <rect>
        <x>20</x>
-       <y>10</y>
+       <y>30</y>
        <width>93</width>
        <height>41</height>
       </rect>
@@ -507,7 +507,7 @@
    </property>
    <item>
     <property name="text">
-     <string>学生信息</string>
+     <string>书本信息</string>
     </property>
     <property name="font">
      <font>
@@ -518,7 +518,7 @@
    </item>
    <item>
     <property name="text">
-     <string>书本信息</string>
+     <string>学生信息</string>
     </property>
     <property name="font">
      <font>

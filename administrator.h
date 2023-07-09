@@ -27,6 +27,9 @@ public:
 
     ~Administrator();
 
+private slots:
+    void on_listWidget_itemClicked(QListWidgetItem *item);
+
 private:
     Ui::Administrator *ui;
     void initGraph();

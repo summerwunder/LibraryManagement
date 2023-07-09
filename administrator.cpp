@@ -19,6 +19,8 @@ Administrator::Administrator(unsigned id,QString name,QWidget *parent) :
     this->id=id;
     this->name=name;
     ui->userName->setText("管理员："+this->name);
+    ui->stackedWidget->setCurrentIndex(0);
+
 }
 
 Administrator::~Administrator()
@@ -29,7 +31,7 @@ Administrator::~Administrator()
 void Administrator::initGraph()
 {
     this->setFixedSize(799,657);
-    this->setWindowTitle("管理员登录界面");
+    this->setWindowTitle("管理员界面");
 }
 
 void Administrator::bookGraph()
@@ -64,13 +66,13 @@ void Administrator::bookGraph()
 
 void Administrator::logGraph()
 {
-    ui->tableViewLog->setFixedSize(599,451);
+    ui->tableViewLog->setFixedSize(599,501);
     logTable=new QSqlTableModel(this);
     logModel = new QSqlQueryModel;
     logTable->setTable("log");
     logTable->select();
     ui->tableViewLog->setModel(logTable);
-     bookTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
+    bookTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
     ui->tableViewLog->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
     ui->tableViewLog->setColumnWidth(0, 45);
     ui->tableViewLog->setColumnWidth(1, 166);
@@ -134,7 +136,7 @@ void Administrator::queryBookFunction()
         bookTable->select();
     }
 }
-
+//查看所有书本信息
 void Administrator::queryAllBookFunction()
 {
     bookTable->setTable("book_info");
@@ -177,13 +179,16 @@ void Administrator::delBookFun()
         //判断是否存在该书本
         MysqlServer::getInstance()->getQuery()->prepare("select * from book_info where isbn = :id");
         MysqlServer::getInstance()->getQuery()->bindValue(":id", ui->isbnEdit->text().toInt());
-        if (MysqlServer::getInstance()->getQuery()->exec()) {
+        if (MysqlServer::getInstance()->getQuery()->exec())
+        {
             // 检查查询结果是否为空
-            if (MysqlServer::getInstance()->getQuery()->next()) {
+            if (MysqlServer::getInstance()->getQuery()->next())
+            {
                 // 如果结果不为空，那么书存在，可以进行删除操作
                 MysqlServer::getInstance()->getQuery()->prepare("delete from book_info where isbn = :id");
                 MysqlServer::getInstance()->getQuery()->bindValue(":id", ui->isbnEdit->text().toInt());
-                if (MysqlServer::getInstance()->getQuery()->exec()) {
+                if (MysqlServer::getInstance()->getQuery()->exec())
+                {
                     bookTable->select();
                 }
             } else {
@@ -216,17 +221,20 @@ void Administrator::insertBookFun()
     bookTable->setData(bookTable->index(rowNum,2),ui->authorEdit->text());
     bookTable->setData(bookTable->index(rowNum,3),ui->publisherEdit->text());
     bookTable->setData(bookTable->index(rowNum,4),QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
-    // 提交改动
+
     bookTable->submitAll() ;
 }
-
+/* 按照isbn进行更新书本信息
+ * 更新书本信息，先判断是否存在该isbh的书本
+ *
+ */
 void Administrator::updateBookFun()
 {
     QString newIsbn = ui->isbnEdit->text();
     int rowNum = -1;
     for (int i = 0; i < bookTable->rowCount(); ++i)
     {
-        if (bookTable->data(bookTable->index(i, 0)).toString() == newIsbn)
+        if (bookTable->data(bookTable->index(i, 0)).toString() == newIsbn)//存在这本书
         {
             rowNum = i;
             break;
@@ -247,6 +255,7 @@ void Administrator::updateBookFun()
     bookTable->setData(bookTable->index(rowNum,2),ui->authorEdit->text());
     bookTable->setData(bookTable->index(rowNum,3),ui->publisherEdit->text());
     bookTable->setData(bookTable->index(rowNum,4),QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
+    bookTable->select();
 }
 
 void Administrator::ascLogOrderFun()
@@ -271,26 +280,23 @@ void Administrator::queryStuFun()
         return;
     }
     int stuId = stuTable->data(stuTable->index(curRow, 0)).toInt();
-
     // 构建 SQL 查询语句
     QString queryStr = "select b.name, r.recordTime, r.backTime "
                        "from book_record AS r "
                        "inner join stu AS s ON r.stu_id = s.id "
                        "inner join book_info AS b ON r.book_id = b.isbn "
-                       "where s.id = :stuId";
+                       "where s.id = :stuId and r.isOver=0";
 
     QSqlQuery *query=MysqlServer::getInstance()->getQuery();
     query->prepare(queryStr);
     query->bindValue(":stuId", stuId);
-
-    // 执行查询
     if (query->exec())
     {
         if (query->exec())
         {
             QDialog* dialog = new QDialog(this);
             dialog->setWindowTitle("借阅记录");
-            dialog->setModal(true);
+            dialog->setModal(true);//先设为模态
             QVBoxLayout* layout = new QVBoxLayout(dialog);
             QTextEdit* textEdit = new QTextEdit(dialog);
             textEdit->setReadOnly(true);
@@ -343,7 +349,6 @@ void Administrator::addStuFun()
             QMessageBox::warning(this, "错误", "插入学生ID不能相同");
             return;
         }
-
         // 执行插入操作
         int rowNum = stuTable->rowCount();
         stuTable->insertRow(rowNum);
@@ -359,6 +364,7 @@ void Administrator::addStuFun()
 
         if(stuTable->submitAll())
             QMessageBox::information(this,"提示","添加学生成功");
+        stuTable->select();
     }
 }
 
@@ -374,11 +380,9 @@ void Administrator::delStuFun()
     if(stuTable->removeRow(curRow))
          QMessageBox::information(this, "成功", "学生已删除");
     stuTable->select();
-
 }
 /*
  * 管理员更新时无权限更改用户的id和账号密码
- *
  *
  */
 void Administrator::updateStuFun()
@@ -402,7 +406,6 @@ void Administrator::updateStuFun()
           QMessageBox::warning(this, "错误", "字段不能为空");
           return;
        }
-       // 执行更新操作
        QSqlQuery* query=MysqlServer::getInstance()->getQuery();
        query->prepare("update stu set name = :name, gender = :gender, tel = :tele where id = :id");
        query->bindValue(":name", dialog.getName());
@@ -414,8 +417,21 @@ void Administrator::updateStuFun()
            QMessageBox::information(this, "成功", "学生信息已更新");
            stuTable->select();
        } else {
-           QMessageBox::warning(this, "错误", "无法更新学生信息：" );
-           qDebug()<< query->lastError().text();
+           QMessageBox::warning(this, "错误", "无法更新学生信息" );
        }
     }
 }
+
+//这是listWidget列表的槽函数，实现切换页面(ui界面自动生成）
+void Administrator::on_listWidget_itemClicked(QListWidgetItem *item)
+{
+    int index = ui->listWidget->row(item);
+    if(index==3)//exit
+    {
+        QMessageBox::information(this,"提示","欢迎下次使用");
+        this->close();
+    }
+    ui->stackedWidget->setCurrentIndex(index);
+
+}
+
