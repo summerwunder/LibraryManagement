@@ -6,11 +6,13 @@
 #include <QStringList>
 #include <mysqlServer.h>
 #include <book.h>
-#include <QVector>
+#include <QList>
 #include <QSqlTableModel>
 #include <QMessageBox>
 #include <QSqlQueryModel>
 #include <addstudialog.h>
+#include <QStandardItemModel>
+#include <QTextEdit>
 namespace Ui {
 class Administrator;
 }

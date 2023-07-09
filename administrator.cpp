@@ -29,11 +29,12 @@ Administrator::~Administrator()
 void Administrator::initGraph()
 {
     this->setFixedSize(799,657);
+    this->setWindowTitle("管理员登录界面");
 }
 
 void Administrator::bookGraph()
 {
-    ui->tableViewBook->setFixedSize(599,389);
+    ui->tableViewBook->setFixedSize(589,325);
     bookTable=new QSqlTableModel(this);
     bookTable->setTable("book_info");
 
@@ -63,7 +64,7 @@ void Administrator::bookGraph()
 
 void Administrator::logGraph()
 {
-    ui->tableViewLog->setFixedSize(599,389);
+    ui->tableViewLog->setFixedSize(599,451);
     logTable=new QSqlTableModel(this);
     logModel = new QSqlQueryModel;
     logTable->setTable("log");
@@ -88,8 +89,9 @@ void Administrator::stuGraph()
     stuModel = new QSqlQueryModel;
     stuTable->setTable("stu");
     stuTable->select();
+
     ui->tableViewStu->setModel(stuTable);
-    bookTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
+    stuTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
     ui->tableViewStu->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
     //this->stuTable->removeColumn(7);//用户名
     //this->stuTable->removeColumn(7);//密码
@@ -115,6 +117,8 @@ void Administrator::stuGraph()
 
     connect(ui->addStuButton,&QPushButton::clicked,this,&Administrator::addStuFun);
     connect(ui->updateStuButton,&QPushButton::clicked,this,&Administrator::updateStuFun);
+    connect(ui->delStuButton,&QPushButton::clicked,this,&Administrator::delStuFun);
+    connect(ui->queryStuButton,&QPushButton::clicked,this,&Administrator::queryStuFun);
 }
 
 /*
@@ -166,15 +170,13 @@ void Administrator::delBookFun()
         return;
     if(ui->isbnEdit->text().isEmpty())
     {
-        int curRow=ui->tableViewBook->currentIndex().row();  //获取选定行
-        bookTable->removeRow(curRow);
+        if(bookTable->removeRow(curRow))
+             QMessageBox::information(this, "成功", "书本已删除");
         bookTable->select();
     }else{
         //判断是否存在该书本
-        // 准备查询
         MysqlServer::getInstance()->getQuery()->prepare("select * from book_info where isbn = :id");
         MysqlServer::getInstance()->getQuery()->bindValue(":id", ui->isbnEdit->text().toInt());
-        // 执行查询
         if (MysqlServer::getInstance()->getQuery()->exec()) {
             // 检查查询结果是否为空
             if (MysqlServer::getInstance()->getQuery()->next()) {
@@ -249,14 +251,69 @@ void Administrator::updateBookFun()
 
 void Administrator::ascLogOrderFun()
 {
-    logModel->setQuery("select * from log ORDER BY log_time ASC");
+    logModel->setQuery("select * from log order by log_time ASC");
     ui->tableViewLog->setModel(logModel);
 }
 
 void Administrator::descLogOrderFun()
 {
-    logModel->setQuery("select * from log ORDER BY log_time DESC");
+    logModel->setQuery("select * from log order by log_time DESC");
     ui->tableViewLog->setModel(logModel);
+}
+
+void Administrator::queryStuFun()
+{
+    // 获取要查询的学生的学号
+    int curRow= ui->tableViewStu->currentIndex().row();
+    if(curRow==-1)
+    {
+        QMessageBox::warning(this,"警告","未选定查找对象，请重新操作");
+        return;
+    }
+    int stuId = stuTable->data(stuTable->index(curRow, 0)).toInt();
+
+    // 构建 SQL 查询语句
+    QString queryStr = "select b.name, r.recordTime, r.backTime "
+                       "from book_record AS r "
+                       "inner join stu AS s ON r.stu_id = s.id "
+                       "inner join book_info AS b ON r.book_id = b.isbn "
+                       "where s.id = :stuId";
+
+    QSqlQuery *query=MysqlServer::getInstance()->getQuery();
+    query->prepare(queryStr);
+    query->bindValue(":stuId", stuId);
+
+    // 执行查询
+    if (query->exec())
+    {
+        if (query->exec())
+        {
+            QDialog* dialog = new QDialog(this);
+            dialog->setWindowTitle("借阅记录");
+            dialog->setModal(true);
+            QVBoxLayout* layout = new QVBoxLayout(dialog);
+            QTextEdit* textEdit = new QTextEdit(dialog);
+            textEdit->setReadOnly(true);
+
+            // 将查询结果填充到文本编辑器中
+            QString result;
+            while (query->next()) {
+                QString bookName = query->value(0).toString();
+                QString recordTime = query->value(1).toDateTime().toString("yyyy-MM-dd hh:mm:ss");
+                QString backTime = query->value(2).toDateTime().toString("yyyy-MM-dd hh:mm:ss");
+                result+="书名："+bookName+"\n借阅时间："+recordTime+"\n应归还时间："+backTime +"\n\n\n";
+            }
+            textEdit->setText(result);
+            // 将文本编辑器添加到布局中
+            layout->addWidget(textEdit);
+
+            // 设置弹窗的大小和显示方式
+            dialog->setFixedSize(400, 300);
+            dialog->exec();
+        }else {
+            QMessageBox::warning(this, "错误", "无法执行查询：" + query->lastError().text());
+        }
+    }
 }
 
 void Administrator::addStuFun()
@@ -264,7 +321,8 @@ void Administrator::addStuFun()
     AddStuDialog dialog(this);
     dialog.setWindowTitle("添加学生");
 
-    if (dialog.exec() == QDialog::Accepted) {
+    if (dialog.exec() == QDialog::Accepted)
+    {
         int id = dialog.getId();
         QString name = dialog.getName();
         QString gender = dialog.getGender();
@@ -299,13 +357,23 @@ void Administrator::addStuFun()
         stuTable->setData(stuTable->index(rowNum, 7), username);
         stuTable->setData(stuTable->index(rowNum, 8), password);
 
-        // 提交改动
-        stuTable->submitAll();
+        if(stuTable->submitAll())
+            QMessageBox::information(this,"提示","添加学生成功");
     }
 }
 
 void Administrator::delStuFun()
 {
+    int curRow=ui->tableViewStu->currentIndex().row();
+    if(curRow==-1)
+    {
+        QMessageBox::warning(this,"警告","未选定删除对象，请重新操作");
+        return;
+    }
+    if(QMessageBox::question(this, "确认删除", "确定要删除该学生吗？",QMessageBox::Yes | QMessageBox::No)==QMessageBox::No)return;
+    if(stuTable->removeRow(curRow))
+         QMessageBox::information(this, "成功", "学生已删除");
+    stuTable->select();
 
 }
 /*

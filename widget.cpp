@@ -7,7 +7,7 @@ Widget::Widget(QWidget *parent)
     , ui(new Ui::Widget)
 {
     ui->setupUi(this);  
-    this->setFixedSize(470,400);
+    this->setFixedSize(441,400);
     this->setWindowTitle("登录界面");
    // this->setStyleSheet("QWidget {background-color: #83cadf}");
    // this->setWindowOpacity(0.88);
@@ -76,8 +76,9 @@ void Widget::clicked_on_loginButton()
                  QString name=query->value(1).toString();
                  QMessageBox::information(this,"info","欢迎管理员登录");
                  this->hide();
-                 Administrator* admin=new Administrator(id,name);
-
+                // Administrator* admin=
+                 new Administrator(id,name);
+                 return;
              }else{
                  QMessageBox::warning(this,"警告","您的密码输入有误");
                  ui->passwordEdit->clear();
