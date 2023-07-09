@@ -30,6 +30,7 @@ public:
 
 private slots:
     void on_choiceComboBox_currentIndexChanged(int index);
+    void tableViewClicked(const QModelIndex& index);
 
 private:
     Ui::Student *ui;

@@ -25,6 +25,8 @@ Student::Student(int id, QString name, QString gender, QString tel,
     this->showMyRecord();
     connect(ui->longerTimeButton,&QPushButton::clicked,this,&Student::addTime);
     connect(ui->returnButton,&QPushButton::clicked,this,&Student::returnBook);
+    connect(ui->BookTableView,&QTableView::clicked,this,&Student::tableViewClicked);
+    connect(ui->borrowButton,&QPushButton::clicked,this,&Student::borrowBook);
 }
 
 Student::~Student()
@@ -79,6 +81,22 @@ void Student::borrowBook()
         return;
     }
     int curRow=ui->BookTableView->currentIndex().row();
+    if(this->mainTable->data(mainTable->index(curRow,4)).toString()=="已被借阅")
+    {
+        QMessageBox::warning(this,"警告","这本书不在馆内，无法借阅");
+        return;
+    }
+    query->prepare("insert into book_record(stu_id,book_id,isOver,recordTime,backTime) "
+                   "values(:id,:isbn,0,now(),date_add(now(),interval :time day))");
+    query->bindValue(":id",this->id);
+    query->bindValue(":isbn",ui->isbnSpinBox->value());
+    query->bindValue(":time",BORROW_TIME);
+    if(query->exec())
+    {
+        QMessageBox::information(this,"提示","借阅成功");
+        this->myTable->select();
+        return;
+    }
 }
 
 void Student::showMyRecord()
@@ -161,7 +179,7 @@ void Student::showAllBooks()
     ui->BookTableView->setColumnWidth(1, 120);
     ui->BookTableView->setColumnWidth(2, 60);
     ui->BookTableView->setColumnWidth(3, 131);
-    ui->BookTableView->setColumnWidth(4, 80);
+    ui->BookTableView->setColumnWidth(4, 70);
 }
 
 void Student::showReaderRating()
@@ -183,15 +201,22 @@ void Student::showReaderRating()
 
 /*
  * comboBox的槽函数（ui生成）
- *
- *
  */
-
 void Student::on_choiceComboBox_currentIndexChanged(int index)
 {
     if(index==0)
         this->showAllBooks();
     else if(index==1)
         this->showReaderRating();
+}
+//槽函数，会让spinBox内容随着点击事件而改变（ISBN）
+void Student::tableViewClicked(const QModelIndex &index)
+{
+    if(index.isValid())
+    {
+        int row=index.row();
+        QString isbn=this->mainTable->data(mainTable->index(row,0)).toString();
+        ui->isbnSpinBox->setValue(isbn.toInt());
+    }
 }
 
