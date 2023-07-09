@@ -95,8 +95,7 @@ void Administrator::stuGraph()
     ui->tableViewStu->setModel(stuTable);
     stuTable->setEditStrategy(QSqlTableModel::OnFieldChange);//自动更新
     ui->tableViewStu->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
-    //this->stuTable->removeColumn(7);//用户名
-    //this->stuTable->removeColumn(7);//密码
+
     ui->tableViewStu->setColumnWidth(0, 40);   // ID
     ui->tableViewStu->setColumnWidth(1, 80);   // 姓名
     ui->tableViewStu->setColumnWidth(2, 70);   // 性别
@@ -346,7 +345,7 @@ void Administrator::addStuFun()
         MysqlServer::getInstance()->getQuery()->exec();
         if (MysqlServer::getInstance()->getQuery()->next())
         {
-            QMessageBox::warning(this, "错误", "插入学生ID不能相同");
+            QMessageBox::warning(this, "错误", "插入读者ID不能相同");
             return;
         }
         // 执行插入操作
@@ -363,7 +362,7 @@ void Administrator::addStuFun()
         stuTable->setData(stuTable->index(rowNum, 8), password);
 
         if(stuTable->submitAll())
-            QMessageBox::information(this,"提示","添加学生成功");
+            QMessageBox::information(this,"提示","添加读者成功");
         stuTable->select();
     }
 }
@@ -376,9 +375,9 @@ void Administrator::delStuFun()
         QMessageBox::warning(this,"警告","未选定删除对象，请重新操作");
         return;
     }
-    if(QMessageBox::question(this, "确认删除", "确定要删除该学生吗？",QMessageBox::Yes | QMessageBox::No)==QMessageBox::No)return;
+    if(QMessageBox::question(this, "确认删除", "确定要删除该读者吗？",QMessageBox::Yes | QMessageBox::No)==QMessageBox::No)return;
     if(stuTable->removeRow(curRow))
-         QMessageBox::information(this, "成功", "学生已删除");
+         QMessageBox::information(this, "成功", "读者已删除");
     stuTable->select();
 }
 /*
@@ -392,7 +391,7 @@ void Administrator::updateStuFun()
     int row = ui->tableViewStu->currentIndex().row();
     if (row < 0)
     {
-       QMessageBox::information(this, "提示", "请先选中一个学生");
+       QMessageBox::information(this, "提示", "请先选中一个读者");
        return;
     }
     int id = stuTable->data(stuTable->index(row, 0)).toInt();
@@ -414,7 +413,7 @@ void Administrator::updateStuFun()
        query->bindValue(":id", id);
        if (query->exec())
        {
-           QMessageBox::information(this, "成功", "学生信息已更新");
+           QMessageBox::information(this, "成功", "读者信息已更新");
            stuTable->select();
        } else {
            QMessageBox::warning(this, "错误", "无法更新学生信息" );

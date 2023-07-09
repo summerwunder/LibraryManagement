@@ -8,4 +8,5 @@
 #define PASSWORD "123456"
 #define ADDRESS "localhost"
 
+#define MORE_TIME 2//续借时间2天
 #endif // PROTOCOL_H

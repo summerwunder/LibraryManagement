@@ -276,7 +276,7 @@
     <string>我的借阅</string>
    </property>
   </widget>
-  <widget class="QTableView" name="tableView">
+  <widget class="QTableView" name="MytableView">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -284,6 +284,11 @@
      <width>421</width>
      <height>271</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>9</pointsize>
+    </font>
    </property>
   </widget>
  </widget>

@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QListWidget>
+#include <protocol.h>
 #include <QStringList>
 #include <mysqlServer.h>
 #include <book.h>
@@ -12,6 +13,7 @@
 #include <QSqlQueryModel>
 #include <QStandardItemModel>
 #include <QTextEdit>
+#include <QSqlRecord>
 namespace Ui {
 class Student;
 }
@@ -31,7 +33,9 @@ private:
     void initGraph();//初始化界面
     void initEdit();//初始化个人信息
     void borrowBook();
-
+    void showMyRecord();//我的借阅
+    void addTime();//续借
+    void returnBook();
 
 
     int id;
