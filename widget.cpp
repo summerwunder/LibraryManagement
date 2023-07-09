@@ -24,7 +24,7 @@ Widget::~Widget()
     MysqlServer::getInstance()->getDb().close();//关闭数据库
 }
 
-Widget::beautify()
+void Widget::beautify()
 {
     //对输入文本美化
     ui->userNameEdit->setPlaceholderText("请输入您的账号");
@@ -74,23 +74,34 @@ void Widget::clicked_on_loginButton()
              {
                  unsigned id=query->value(0).toUInt();
                  QString name=query->value(1).toString();
-                 QMessageBox::information(this,"info","欢迎管理员登录");
+                 //QMessageBox::information(this,"info","欢迎管理员登录");
                  this->hide();
-                // Administrator* admin=
                  new Administrator(id,name);
                  return;
              }else{
                  QMessageBox::warning(this,"警告","您的密码输入有误");
                  ui->passwordEdit->clear();
+                 return;
              }
         }else{          //读者
              QString password= query->value(8).toString();
              if(password==strPassword)
              {
-                  QMessageBox::information(this,"info","欢迎读者登录");
+                //QMessageBox::information(this,"info","欢迎读者登录");
+                int id=query->value(0).toInt();
+                QString name=query->value(1).toString();
+                QString gender=query->value(2).toString();
+                QString tel=query->value(3).toString();
+                int borrowNum=query->value(4).toInt();
+                int readNum=query->value(5).toInt();
+                int defyNum=query->value(6).toInt();
+                new Student(id,name,gender,tel,borrowNum,readNum,defyNum);
+                this->hide();
+                return;
              }else{
                  QMessageBox::warning(this,"警告","您的密码输入有误");
                  ui->passwordEdit->clear();
+                 return;
              }
         }
     }
