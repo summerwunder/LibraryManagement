@@ -165,11 +165,6 @@
      <string>用户排行榜</string>
     </property>
    </item>
-   <item>
-    <property name="text">
-     <string>借阅图书排行榜</string>
-    </property>
-   </item>
   </widget>
   <widget class="QPushButton" name="passwordChangeButton">
    <property name="geometry">

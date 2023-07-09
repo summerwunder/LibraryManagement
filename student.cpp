@@ -16,6 +16,8 @@ Student::Student(int id, QString name, QString gender, QString tel,
     this->bookReadNum=bookReadNum;
     this->defyNum=defyNum;
     ui->userName->setText("学生:"+name);
+    ui->choiceComboBox->setCurrentIndex(0);
+    this->showAllBooks();
 
 
     this->initGraph();
@@ -59,6 +61,24 @@ void Student::initEdit()
     ui->infoText->setPlainText(text);
     ui->infoText->setFont(QFont(QString("黑体"),14));
     ui->infoText->setReadOnly(true);
+}
+
+/*
+ * 借书，可以通过spinBox或者行选择
+ */
+void Student::borrowBook()
+{
+    //先检查
+    if(this->borrowNum>=MAX_BORROW)
+    {
+        QMessageBox::information(this,"提示","你的借书数目已经到达了上限");
+        return;
+    }else if(this->defyNum>=MAX_DEFY)
+    {
+        QMessageBox::warning(this,"警告","你违规次数过多无法借书，请联系管理员");
+        return;
+    }
+    int curRow=ui->BookTableView->currentIndex().row();
 }
 
 void Student::showMyRecord()
@@ -123,4 +143,55 @@ void Student::returnBook()
     }
 }
 
+void Student::showAllBooks()
+{
+    this->mainTable=new QSqlTableModel;
+    this->mainTable->setTable("book_view");
+    mainTable->select();
+    ui->BookTableView->setModel(mainTable);
+
+    mainTable->setHeaderData(0, Qt::Horizontal, "ISBN");
+    mainTable->setHeaderData(1, Qt::Horizontal, "书名");
+    mainTable->setHeaderData(2, Qt::Horizontal, "作者");
+    mainTable->setHeaderData(3, Qt::Horizontal, "出版社");
+    mainTable->setHeaderData(4, Qt::Horizontal, "状态");
+
+    ui->BookTableView->setFixedSize(451,531);
+    ui->BookTableView->setColumnWidth(0, 50);
+    ui->BookTableView->setColumnWidth(1, 120);
+    ui->BookTableView->setColumnWidth(2, 60);
+    ui->BookTableView->setColumnWidth(3, 131);
+    ui->BookTableView->setColumnWidth(4, 80);
+}
+
+void Student::showReaderRating()
+{
+    this->userTable=new QSqlTableModel;
+    userTable->setTable("sturating");
+    userTable->setSort(2,Qt::DescendingOrder);
+    userTable->select();
+    userTable->setHeaderData(0, Qt::Horizontal, "姓名");
+    userTable->setHeaderData(1, Qt::Horizontal, "性别");
+    userTable->setHeaderData(2, Qt::Horizontal, "借阅总数");
+    ui->BookTableView->setModel(userTable);
+
+    ui->BookTableView->setFixedSize(451,531);
+    ui->BookTableView->setColumnWidth(0, 171);
+    ui->BookTableView->setColumnWidth(1, 120);
+    ui->BookTableView->setColumnWidth(2, 160);
+}
+
+/*
+ * comboBox的槽函数（ui生成）
+ *
+ *
+ */
+
+void Student::on_choiceComboBox_currentIndexChanged(int index)
+{
+    if(index==0)
+        this->showAllBooks();
+    else if(index==1)
+        this->showReaderRating();
+}
 

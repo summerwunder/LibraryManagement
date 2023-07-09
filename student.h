@@ -28,6 +28,9 @@ public:
     ~Student();
     Student();
 
+private slots:
+    void on_choiceComboBox_currentIndexChanged(int index);
+
 private:
     Ui::Student *ui;
     void initGraph();//初始化界面
@@ -36,6 +39,8 @@ private:
     void showMyRecord();//我的借阅
     void addTime();//续借
     void returnBook();
+    void showAllBooks();
+    void showReaderRating();
 
 
     int id;
@@ -47,6 +52,8 @@ private:
     int defyNum;//违规数目
 
     QSqlTableModel* myTable;//表示个人所借阅书籍
+    QSqlTableModel* mainTable;//在馆图书
+    QSqlTableModel* userTable;//用户排行
     QSqlQuery* query=MysqlServer::getInstance()->getQuery();
 };
 

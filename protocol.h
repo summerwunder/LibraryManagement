@@ -9,4 +9,6 @@
 #define ADDRESS "localhost"
 
 #define MORE_TIME 2//续借时间2天
+#define MAX_DEFY 3//最多违规次数
+#define MAX_BORROW 3//最多借阅量
 #endif // PROTOCOL_H
