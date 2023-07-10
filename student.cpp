@@ -122,8 +122,8 @@ void Student::showMyRecord()
 
     this->myTable->removeColumn(3);
     ui->MytableView->setFixedSize(421,271);
-    ui->MytableView->setColumnWidth(0, 161);
-    ui->MytableView->setColumnWidth(1, 130);
+    ui->MytableView->setColumnWidth(0, 151);
+    ui->MytableView->setColumnWidth(1, 120);
     ui->MytableView->setColumnWidth(2, 130);
     // 设置表头标题
     myTable->setHeaderData(0, Qt::Horizontal, "书名");

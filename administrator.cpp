@@ -399,7 +399,13 @@ void Administrator::delStuFun()
         QMessageBox::warning(this,"警告","未选定删除对象，请重新操作");
         return;
     }
-    if(QMessageBox::question(this, "确认删除", "确定要删除该读者吗？",QMessageBox::Yes | QMessageBox::No)==QMessageBox::No)return;
+    if(QMessageBox::question(this, "确认删除", "确定要删除该读者吗？",
+                QMessageBox::Yes | QMessageBox::No)==QMessageBox::No)return;
+    if(stuTable->data(stuTable->index(curRow,4)).toInt()!=0)//说明此时读者仍在借书
+    {
+        QMessageBox::information(this,"提示","请保证读者归还所有书后再进行删除");
+        return;
+    }
     if(stuTable->removeRow(curRow))
          QMessageBox::information(this, "成功", "读者已删除");
     stuTable->select();
