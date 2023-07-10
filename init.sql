@@ -62,9 +62,6 @@ create trigger trigger_record_book after insert on book_record for each row
     end;
 ##
 delimiter ;
-drop trigger  trigger_record_book;
-
-drop trigger trigger_return_book;
 #自动添加读者日志
 create trigger trigger_add_stu after insert on stu for each row
     begin
@@ -89,7 +86,6 @@ create trigger trigger_add_book after insert on book_info for each row
     end;
 #自动删除书本日志
 DELIMITER ##
-
 create trigger trigger_delete_book
 before delete on book_info for each row
 begin
@@ -102,15 +98,15 @@ begin
     INSERT INTO log VALUES (NULL, NOW(), CONCAT('isbn号为',old.isbn,'的书本',old.name,'被删除了'));
 
 END##
-
 DELIMITER ;
 #自动更新书本日志
 create trigger trigger_update_book after update on book_info for each row
     begin
         INSERT INTO log VALUES (NULL, NOW(), CONCAT('isbn号为',old.isbn,'的书本',old.name,'被更新了'));
     end;
-
+#更新归还日志
 delimiter ##
+
 create trigger trigger_return_book after update on book_record for each row
     begin
         if (new.isOver<>old.isOver and now()<new.backTime) then
