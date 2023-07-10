@@ -70,6 +70,9 @@ void Student::initEdit()
     ui->infoText->setPlainText(text);
     ui->infoText->setFont(QFont(QString("黑体"),14));
     ui->infoText->setReadOnly(true);
+    this->borrowNum=infoTable->data(infoTable->index(0,4)).toInt();
+    this->bookReadNum=infoTable->data(infoTable->index(0,5)).toInt();
+    this->defyNum=infoTable->data(infoTable->index(0,6)).toInt();
 }
 
 /*
@@ -77,6 +80,7 @@ void Student::initEdit()
  */
 void Student::borrowBook()
 {
+    //this->initEdit();
     //先检查
     if(this->borrowNum>=MAX_BORROW)
     {
@@ -102,6 +106,7 @@ void Student::borrowBook()
     {
         QMessageBox::information(this,"提示","借阅成功");
         this->myTable->select();
+        this->mainTable->select();
         this->initEdit();
         return;
     }
