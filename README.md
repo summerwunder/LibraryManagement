@@ -1,9 +1,5 @@
-![image](https://github.com/summerwunder/LibraryManagement/assets/134956419/0686e4ea-29b0-4132-acf3-22000177bd3c)# LibraryManagement
 
 # LibraryManagement
-
-![LibraryManagement](https://github.com/summerwunder/LibraryManagement/blob/main/assets/LibraryManagement.png)
-
 ## 简介
 
 LibraryManagement 是一个基于 Qt 和 MySQL 的图书管理系统，旨在帮助图书馆管理图书的借阅和归还。
