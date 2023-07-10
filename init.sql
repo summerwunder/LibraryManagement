@@ -45,6 +45,14 @@ create table log(
     event varchar(50) not null
 );
 
+create table unreturn_log(
+    id int primary key auto_increment,
+    stu_id int unique ,
+    stu_name varchar(30),
+    book_id int,
+    book_name varchar(30),
+    log_time datetime           -- 时间
+);
 #自动加入借书日志的
 delimiter ##
 create trigger trigger_record_book after insert on book_record for each row
@@ -142,7 +150,10 @@ do
             end if;
             update book_record set isOver=1 where book_id=book_record.book_id and stu_id=book_record.stu_id;
             insert into log values(null,now(),concat('书号为', book_id_use, '的书已经到期，借书学生ID为', stu_id_use));
-            update stu set stu.defy_num=stu.defy_num+1 ,stu.borrow_num=stu.borrow_num-1;
+            update stu set stu.defy_num=stu.defy_num+1 ,stu.borrow_num=stu.borrow_num-1 where stu.id=stu_id_use;
+
+            insert into unreturn_log(stu_id, stu_name, book_id, book_name, log_time)select stu_id_use, stu.name, book_id_use, book_info.name, NOW()
+            from stu  join book_info on stu.id = stu_id_use and book_info.isbn = book_id_use;
         end loop read_data;
         close cur;
         set done=0;
