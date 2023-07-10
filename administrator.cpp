@@ -269,6 +269,10 @@ void Administrator::updateBookFun()
     bookTable->setData(bookTable->index(rowNum,4),QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
     bookTable->select();
     QMessageBox::information(this,"提示","修改成功");
+    ui->isbnEdit->clear();
+    ui->booknameEdit->clear();
+    ui->authorEdit->clear();
+    ui->publisherEdit->clear();
 }
 
 void Administrator::ascLogOrderFun()

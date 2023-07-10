@@ -23,7 +23,7 @@ create table admin(
 create table book_info(
     isbn int primary key,
     name varchar(30) not null,
-    author varchar(10) not null,
+    author varchar(50) not null,
     publisher varchar(20) not null,
     addTime date not null
 );
@@ -80,10 +80,22 @@ create trigger trigger_add_book after insert on book_info for each row
         INSERT INTO log VALUES (NULL, NOW(), CONCAT('isbn号为',new.isbn,'的书本',new.name,'被添加了'));
     end;
 #自动删除书本日志
-create trigger trigger_delete_book after delete on book_info for each row
-    begin
-        INSERT INTO log VALUES (NULL, NOW(), CONCAT('isbn号为',old.isbn,'的书本',old.name,'被删除了'));
-    end;
+DELIMITER ##
+
+create trigger trigger_delete_book
+before delete on book_info for each row
+begin
+    -- 更新学生借书信息
+    update stu set borrow_num = borrow_num - 1 where id IN (
+        select DISTINCT stu_id FROM book_record where book_id = OLD.isbn and isOver = 0
+    );
+    -- 删除book_record中对应的记录
+    delete from book_record where book_id = old.isbn;
+    INSERT INTO log VALUES (NULL, NOW(), CONCAT('isbn号为',old.isbn,'的书本',old.name,'被删除了'));
+
+END##
+
+DELIMITER ;
 #自动更新书本日志
 create trigger trigger_update_book after update on book_info for each row
     begin
