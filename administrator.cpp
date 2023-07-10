@@ -221,7 +221,14 @@ void Administrator::insertBookFun()
     bookTable->setData(bookTable->index(rowNum,3),ui->publisherEdit->text());
     bookTable->setData(bookTable->index(rowNum,4),QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
 
-    bookTable->submitAll() ;
+    if(bookTable->submitAll())
+    {
+        QMessageBox::information(this,"提示","添加成功");
+        ui->isbnEdit->clear();
+        ui->booknameEdit->clear();
+        ui->authorEdit->clear();
+        ui->publisherEdit->clear();
+    }
 }
 /* 按照isbn进行更新书本信息
  * 更新书本信息，先判断是否存在该isbh的书本
@@ -249,12 +256,19 @@ void Administrator::updateBookFun()
            return;
        }
     }
+    if(ui->booknameEdit->text().isEmpty()||ui->authorEdit->text().isEmpty()||
+            ui->publisherEdit->text().isEmpty())
+    {
+        QMessageBox::information(this,"提示","有未填写的字段");
+        return;
+    }
     // 更新数据
     bookTable->setData(bookTable->index(rowNum,1),ui->booknameEdit->text());
     bookTable->setData(bookTable->index(rowNum,2),ui->authorEdit->text());
     bookTable->setData(bookTable->index(rowNum,3),ui->publisherEdit->text());
     bookTable->setData(bookTable->index(rowNum,4),QDateTime::currentDateTime().toString("yyyy-MM-dd HH:mm:ss"));
     bookTable->select();
+    QMessageBox::information(this,"提示","修改成功");
 }
 
 void Administrator::ascLogOrderFun()
