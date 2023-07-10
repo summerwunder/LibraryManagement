@@ -23,7 +23,7 @@
     </rect>
    </property>
    <property name="currentIndex">
-    <number>0</number>
+    <number>1</number>
    </property>
    <widget class="QWidget" name="pageBook">
     <widget class="QWidget" name="layoutWidget">
@@ -268,13 +268,25 @@
     <widget class="QWidget" name="layoutWidget">
      <property name="geometry">
       <rect>
-       <x>11</x>
-       <y>21</y>
+       <x>10</x>
+       <y>10</y>
        <width>601</width>
-       <height>101</height>
+       <height>111</height>
       </rect>
      </property>
      <layout class="QGridLayout" name="gridLayout">
+      <item row="4" column="1">
+       <widget class="QPushButton" name="queryStuButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>查询指定读者的借书信息</string>
+        </property>
+       </widget>
+      </item>
       <item row="0" column="0">
        <widget class="QPushButton" name="addStuButton">
         <property name="font">
@@ -299,7 +311,19 @@
         </property>
        </widget>
       </item>
-      <item row="0" column="1">
+      <item row="4" column="0">
+       <widget class="QPushButton" name="delStuButton">
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>删除读者</string>
+        </property>
+       </widget>
+      </item>
+      <item row="1" column="0">
        <widget class="QPushButton" name="updateStuButton">
         <property name="font">
          <font>
@@ -323,27 +347,15 @@
         </property>
        </widget>
       </item>
-      <item row="1" column="0">
-       <widget class="QPushButton" name="delStuButton">
+      <item row="0" column="1">
+       <widget class="QPushButton" name="unreturnButton">
         <property name="font">
          <font>
           <pointsize>12</pointsize>
          </font>
         </property>
         <property name="text">
-         <string>删除读者</string>
-        </property>
-       </widget>
-      </item>
-      <item row="1" column="1">
-       <widget class="QPushButton" name="queryStuButton">
-        <property name="font">
-         <font>
-          <pointsize>12</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>查询读者借书信息</string>
+         <string>查询超期未归还的借阅信息</string>
         </property>
        </widget>
       </item>

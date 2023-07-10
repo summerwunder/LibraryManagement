@@ -49,7 +49,12 @@ void Administrator::bookGraph()
     ui->tableViewBook->setColumnWidth(1, 160);
     ui->tableViewBook->setColumnWidth(2, 120);
     ui->tableViewBook->setColumnWidth(3, 120);
-    ui->tableViewBook->setColumnWidth(4, 129);
+    ui->tableViewBook->setColumnWidth(4, 120);
+    bookTable->setHeaderData(0, Qt::Horizontal, "ISBN");
+    bookTable->setHeaderData(1, Qt::Horizontal, "书名");
+    bookTable->setHeaderData(2, Qt::Horizontal, "作者");
+    bookTable->setHeaderData(3, Qt::Horizontal, "出版社");
+    bookTable->setHeaderData(4, Qt::Horizontal, "添加时间");
     /*书本这块的槽函数*/
     connect(ui->queryBookButton,&QPushButton::clicked,this,&Administrator::queryBookFunction);
     connect(ui->queryAllBookButton,&QPushButton::clicked,this,&Administrator::queryAllBookFunction);
@@ -120,6 +125,7 @@ void Administrator::stuGraph()
     connect(ui->updateStuButton,&QPushButton::clicked,this,&Administrator::updateStuFun);
     connect(ui->delStuButton,&QPushButton::clicked,this,&Administrator::delStuFun);
     connect(ui->queryStuButton,&QPushButton::clicked,this,&Administrator::queryStuFun);
+    connect(ui->unreturnButton,&QPushButton::clicked,this,&Administrator::unreturnFun);
 }
 
 /*
@@ -450,5 +456,39 @@ void Administrator::on_listWidget_itemClicked(QListWidgetItem *item)
     }
     ui->stackedWidget->setCurrentIndex(index);
 
+}
+
+void Administrator::unreturnFun()
+{
+    QSqlQuery* query=MysqlServer::getInstance()->getQuery();
+    query->prepare("select * from unreturn_log");
+    if (query->exec())
+    {
+        QDialog* dialog = new QDialog(this);
+        dialog->setWindowTitle("未归还记录");
+        dialog->setModal(true);//先设为模态
+        QVBoxLayout* layout = new QVBoxLayout(dialog);
+        QTextEdit* textEdit = new QTextEdit(dialog);
+        textEdit->setReadOnly(true);
+        // 将查询结果填充到文本编辑器中
+        QString result;
+        while (query->next()) {
+            int stuId=query->value(1).toInt();
+            QString stuName = query->value(2).toString();
+            int bookId=query->value(3).toInt();
+            QString bookName= query->value(4).toString();
+            QString logTime = query->value(5).toDateTime().toString("yyyy-MM-dd hh:mm:ss");
+            result+="学号："+QString::number(stuId)+"\t姓名："+stuName+"\n";
+            result+="ISBN："+QString::number(bookId)+"\t书名"+bookName+"\n";
+            result+="记录时间："+logTime+"\n\n\n";
+        }
+        textEdit->setText(result);
+
+        layout->addWidget(textEdit);
+        dialog->setFixedSize(400, 300);
+        dialog->exec();
+    }else {
+        QMessageBox::warning(this, "错误", "无法执行" + query->lastError().text());
+    }
 }
 

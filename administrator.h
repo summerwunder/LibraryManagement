@@ -29,7 +29,7 @@ public:
 
 private slots:
     void on_listWidget_itemClicked(QListWidgetItem *item);
-
+    void unreturnFun();
 private:
     Ui::Administrator *ui;
     void initGraph();
