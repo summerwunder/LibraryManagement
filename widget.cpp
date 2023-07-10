@@ -95,7 +95,8 @@ void Widget::clicked_on_loginButton()
                 int borrowNum=query->value(4).toInt();
                 int readNum=query->value(5).toInt();
                 int defyNum=query->value(6).toInt();
-                new Student(id,name,gender,tel,borrowNum,readNum,defyNum);
+                QString password=query->value(8).toString();
+                new Student(id,name,gender,tel,borrowNum,readNum,defyNum,password);
                 this->hide();
                 return;
              }else{

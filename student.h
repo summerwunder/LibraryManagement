@@ -14,6 +14,8 @@
 #include <QStandardItemModel>
 #include <QTextEdit>
 #include <QSqlRecord>
+#include <changepassword.h>
+
 namespace Ui {
 class Student;
 }
@@ -24,13 +26,14 @@ class Student : public QWidget
 
 public:
     explicit Student(int id, QString name, QString gender, QString tel,
-                     int borrowNum, int bookReadNum, int defyNum,QWidget *parent=nullptr) ;
+                     int borrowNum, int bookReadNum, int defyNum,QString password,QWidget *parent=nullptr) ;
     ~Student();
     Student();
 
 private slots:
     void on_choiceComboBox_currentIndexChanged(int index);
     void tableViewClicked(const QModelIndex& index);
+    void changePasswordFun();
 
 private:
     Ui::Student *ui;
@@ -51,6 +54,7 @@ private:
     int borrowNum;//借阅书本数目
     int bookReadNum;//所有借阅数目
     int defyNum;//违规数目
+    QString password;
 
     QSqlTableModel* infoTable;//个人信息
     QSqlTableModel* myTable;//表示个人所借阅书籍

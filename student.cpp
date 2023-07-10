@@ -2,7 +2,7 @@
 #include "ui_student.h"
 
 Student::Student(int id, QString name, QString gender, QString tel,
-                 int borrowNum, int bookReadNum, int defyNum,QWidget *parent) :
+                 int borrowNum, int bookReadNum, int defyNum,QString password,QWidget *parent) :
     QWidget(parent),
     ui(new Ui::Student)
 {
@@ -15,6 +15,8 @@ Student::Student(int id, QString name, QString gender, QString tel,
     this->borrowNum=borrowNum;
     this->bookReadNum=bookReadNum;
     this->defyNum=defyNum;
+    this->password=password;
+
     ui->userName->setText("学生:"+name);
     ui->choiceComboBox->setCurrentIndex(0);
     this->showAllBooks();
@@ -27,6 +29,7 @@ Student::Student(int id, QString name, QString gender, QString tel,
     connect(ui->returnButton,&QPushButton::clicked,this,&Student::returnBook);
     connect(ui->BookTableView,&QTableView::clicked,this,&Student::tableViewClicked);
     connect(ui->borrowButton,&QPushButton::clicked,this,&Student::borrowBook);
+    connect(ui->passwordChangeButton,&QPushButton::clicked,this,&Student::changePasswordFun);
 }
 
 Student::~Student()
@@ -225,5 +228,10 @@ void Student::tableViewClicked(const QModelIndex &index)
         QString isbn=this->mainTable->data(mainTable->index(row,0)).toString();
         ui->isbnSpinBox->setValue(isbn.toInt());
     }
+}
+
+void Student::changePasswordFun()
+{
+    new ChangePassword(this->id,this->password);
 }
 

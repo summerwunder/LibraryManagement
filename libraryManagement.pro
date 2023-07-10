@@ -12,6 +12,7 @@ SOURCES += \
     addstudialog.cpp \
     administrator.cpp \
     book.cpp \
+    changepassword.cpp \
     datelabel.cpp \
     main.cpp \
     mysqlServer.cpp \
@@ -22,6 +23,7 @@ HEADERS += \
     addstudialog.h \
     administrator.h \
     book.h \
+    changepassword.h \
     datelabel.h \
     mysqlServer.h \
     protocol.h \
@@ -31,6 +33,7 @@ HEADERS += \
 FORMS += \
     addstudialog.ui \
     administrator.ui \
+    changepassword.ui \
     datelabel.ui \
     student.ui \
     widget.ui
