@@ -68,10 +68,17 @@ create trigger trigger_add_stu after insert on stu for each row
         INSERT INTO log VALUES (NULL, NOW(), CONCAT('id号为',new.id,'的读者',new.name,'被添加了'));
     end;
 #自动删除读者日志
-create trigger trigger_del_stu after delete on stu for each row
-    begin
+create definer = root@localhost trigger trigger_del_stu
+    before delete
+    on stu
+    for each row
+begin
+         -- 删除book_record中对应的记录
+        delete from book_record where book_record.stu_id = old.id;
         INSERT INTO log VALUES (NULL, NOW(), CONCAT('id号为',old.id,'的读者',old.name,'资格被取消了'));
     end;
+
+
 #自动更新读者日志
 create trigger trigger_update_stu after update on stu for each row
     begin
@@ -168,17 +175,11 @@ where r.isOver = 0;
 create view book_view as
 select b.isbn, b.name, b.author, b.publisher,
        case
-           when r.id IS NULL then '未被借阅'
-           else '已被借阅'
-        end AS status
-from book_info b
-left join (
-  select book_id, MAX(id) as max_id
-  from book_record
-  where isOver = 0
-  group by book_id
-) as latest on b.isbn = latest.book_id
-left join book_record r on latest.book_id = r.book_id and latest.max_id = r.id;
+           when (select count(*) from book_record r where r.book_id = b.isbn and r.isOver = 0) > 0 then '已被借阅'
+           else '未被借阅'
+       end as status
+from book_info b;
+
 
 #视图3
 create view stuRating as
