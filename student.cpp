@@ -48,6 +48,7 @@ void Student::initGraph()
     this->setWindowTitle("学生界面");
     this->setFixedSize(965,720);
     connect(ui->exitButton,&QPushButton::clicked,[=](){
+        QMessageBox::information(this,"提示","欢迎下次使用");
         this->close();
     });
 }

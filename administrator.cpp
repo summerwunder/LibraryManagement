@@ -46,7 +46,7 @@ void Administrator::bookGraph()
     ui->tableViewBook->setEditTriggers(QAbstractItemView::NoEditTriggers);//不可编辑
     //设置列宽
     ui->tableViewBook->setColumnWidth(0, 60);
-    ui->tableViewBook->setColumnWidth(1, 160);
+    ui->tableViewBook->setColumnWidth(1, 180);
     ui->tableViewBook->setColumnWidth(2, 120);
     ui->tableViewBook->setColumnWidth(3, 120);
     ui->tableViewBook->setColumnWidth(4, 120);
@@ -437,6 +437,7 @@ void Administrator::updateStuFun()
        QMessageBox::information(this, "提示", "请先选中一个读者");
        return;
     }
+    //先行显示读者部分信息并且设为不可修改
     int id = stuTable->data(stuTable->index(row, 0)).toInt();
     QString username = stuTable->data(stuTable->index(row, 7)).toString();
     QString password = stuTable->data(stuTable->index(row, 8)).toString();
@@ -448,6 +449,7 @@ void Administrator::updateStuFun()
           QMessageBox::warning(this, "错误", "字段不能为空");
           return;
        }
+       //执行SQL语句进行修改
        QSqlQuery* query=MysqlServer::getInstance()->getQuery();
        query->prepare("update stu set name = :name, gender = :gender, tel = :tele where id = :id");
        query->bindValue(":name", dialog.getName());

@@ -7,6 +7,8 @@ ChangePassword::ChangePassword(int id,QString password,QWidget *parent) :
 {
     ui->setupUi(this);
     this->show();
+    this->setFixedSize(432,316);
+    this->setWindowTitle("修改密码");
     ui->changeAgainLineEdit->setEchoMode(QLineEdit::Password);
     ui->changeLineEdit->setEchoMode(QLineEdit::Password);
     connect(ui->sureButton,&QPushButton::clicked,this,&ChangePassword::sureButtonClicked);
