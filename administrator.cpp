@@ -210,10 +210,20 @@ void Administrator::delBookFun()
 void Administrator::insertBookFun()
 {
     QString newIsbn = ui->isbnEdit->text();
+    if( !newIsbn.toInt())
+    {
+        QMessageBox::warning(this,"警告","ISBN输入有误！！！");//说明输入的非数字,toInt返回0
+        return;
+    }
+
     // 先检查书是否已存在
     MysqlServer::getInstance()->getQuery()->prepare("SELECT * FROM book_info where isbn = :id");
     MysqlServer::getInstance()->getQuery()->bindValue(":id", newIsbn);
-    MysqlServer::getInstance()->getQuery()->exec();
+    if(!MysqlServer::getInstance()->getQuery()->exec())
+    {
+        QMessageBox::warning(this,"警告","输入有误!");
+        return;
+    }
     if ( MysqlServer::getInstance()->getQuery()->next()) {//说明确实有数据
         QMessageBox::warning(this, "错误", "插入isbn不能相同");
         return;
@@ -234,7 +244,10 @@ void Administrator::insertBookFun()
         ui->booknameEdit->clear();
         ui->authorEdit->clear();
         ui->publisherEdit->clear();
+    }else{
+        QMessageBox::warning(this,"警告","输入有误!");
     }
+
 }
 /* 按照isbn进行更新书本信息
  * 更新书本信息，先判断是否存在该isbh的书本
