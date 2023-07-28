@@ -50,14 +50,20 @@ bool Widget::isEmpty()
     return false;
 }
 
+/*
+ * 判断登录
+ *
+ */
 void Widget::clicked_on_loginButton()
 {
     if(this->isEmpty())
         return ;
+    //获取文本
     QSqlQuery *query=MysqlServer::getInstance()->getQuery();
     QString strLogin=ui->userNameEdit->text();
     QString strPassword=ui->passwordEdit->text();
     QString strUser;
+    //选定身份
     if(ui->adminButton->isChecked()) strUser="admin";
     else if(ui->readerButton->isChecked()) strUser="stu";
 
@@ -76,6 +82,7 @@ void Widget::clicked_on_loginButton()
                  QString name=query->value(1).toString();
                  //QMessageBox::information(this,"info","欢迎管理员登录");
                  this->hide();
+                 //创建管理员界面
                  new Administrator(id,name);
                  return;
              }else{
@@ -88,6 +95,7 @@ void Widget::clicked_on_loginButton()
              if(password==strPassword)
              {
                 //QMessageBox::information(this,"info","欢迎读者登录");
+                 //获取相应的数据，为实现个人信息做准备
                 int id=query->value(0).toInt();
                 QString name=query->value(1).toString();
                 QString gender=query->value(2).toString();
@@ -101,11 +109,12 @@ void Widget::clicked_on_loginButton()
                 return;
              }else{
                  QMessageBox::warning(this,"警告","您的密码输入有误");
-                 ui->passwordEdit->clear();
+                 ui->passwordEdit->clear();//把密码栏给清空
                  return;
              }
         }
     }
+    //未找到相应的账号就报错
     QMessageBox::warning(this,"警告","您的账号输入有误");
 }
 

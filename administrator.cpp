@@ -182,6 +182,11 @@ void Administrator::delBookFun()
         bookTable->select();
     }else{
         //判断是否存在该书本
+        if(!ui->isbnEdit->text().toInt())
+        {
+            QMessageBox::warning(this,"警告","ISBN输入有误！！！");//说明输入的非数字,toInt返回0
+            return;
+        }
         MysqlServer::getInstance()->getQuery()->prepare("select * from book_info where isbn = :id");
         MysqlServer::getInstance()->getQuery()->bindValue(":id", ui->isbnEdit->text().toInt());
         if (MysqlServer::getInstance()->getQuery()->exec())
@@ -230,7 +235,9 @@ void Administrator::insertBookFun()
     }
     // 执行插入操作
     int rowNum=bookTable->rowCount();
+    //插入行
     bookTable->insertRow(rowNum);
+    //向新增行中加入数据
     bookTable->setData(bookTable->index(rowNum,0),newIsbn);
     bookTable->setData(bookTable->index(rowNum,1),ui->booknameEdit->text());
     bookTable->setData(bookTable->index(rowNum,2),ui->authorEdit->text());
@@ -305,7 +312,11 @@ void Administrator::descLogOrderFun()
     logModel->setQuery("select * from log order by log_time DESC");
     ui->tableViewLog->setModel(logModel);
 }
-
+/*
+ * 槽函数
+ * 获取选定读者的在借记录
+ *
+ */
 void Administrator::queryStuFun()
 {
     // 获取要查询的学生的学号

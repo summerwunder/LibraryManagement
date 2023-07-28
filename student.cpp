@@ -52,11 +52,16 @@ void Student::initGraph()
         this->close();
     });
 }
-
+/*
+ * 展示个人信息数据
+ * 初始化函数，无参数无返回值
+ *
+ */
 void Student::initEdit()
 {
     infoTable=new QSqlTableModel;
     infoTable->setTable("stu");
+    //向sql语句加入where过滤条件
     infoTable->setFilter(QString("id=%1").arg(this->id));
     infoTable->select();
     QString text;
@@ -69,6 +74,7 @@ void Student::initEdit()
     text += "违规次数: " + infoTable->data(infoTable->index(0,6)).toString() + "\n";
 
     ui->infoText->setPlainText(text);
+    //设置文本框基本属性
     ui->infoText->setFont(QFont(QString("黑体"),14));
     ui->infoText->setReadOnly(true);
     this->borrowNum=infoTable->data(infoTable->index(0,4)).toInt();
@@ -81,7 +87,6 @@ void Student::initEdit()
  */
 void Student::borrowBook()
 {
-    //this->initEdit();
     //先检查
     if(this->borrowNum>=MAX_BORROW)
     {
@@ -112,16 +117,21 @@ void Student::borrowBook()
         return;
     }
 }
-
+/*
+ * 展示个人借阅信息
+ *
+ */
 void Student::showMyRecord()
 {
     this->myTable=new QSqlTableModel;
     myTable->setTable("book_record_view");
+    //过滤（where）查找
     myTable->setFilter(QString("stu_id=%1").arg(this->id));
     myTable->select();
     ui->MytableView->setModel(myTable);
-
+    //移除视图中的学号
     this->myTable->removeColumn(3);
+    //设置表大小及每列的宽度
     ui->MytableView->setFixedSize(421,271);
     ui->MytableView->setColumnWidth(0, 151);
     ui->MytableView->setColumnWidth(1, 120);
@@ -130,7 +140,6 @@ void Student::showMyRecord()
     myTable->setHeaderData(0, Qt::Horizontal, "书名");
     myTable->setHeaderData(1, Qt::Horizontal, "借阅时间");
     myTable->setHeaderData(2, Qt::Horizontal, "理应归还时间");
-
 }
 
 void Student::addTime()
@@ -149,7 +158,9 @@ void Student::addTime()
         QMessageBox::information(this,"提示","续借成功");
     this->myTable->select();
 }
-
+/*
+ * 归还图书槽函数
+ */
 void Student::returnBook()
 {
     int curRow=ui->MytableView->currentIndex().row();
@@ -204,11 +215,12 @@ void Student::showReaderRating()
     userTable->setTable("sturating");
     userTable->setSort(2,Qt::DescendingOrder);
     userTable->select();
+    //设置头行元素
     userTable->setHeaderData(0, Qt::Horizontal, "姓名");
     userTable->setHeaderData(1, Qt::Horizontal, "性别");
     userTable->setHeaderData(2, Qt::Horizontal, "借阅总数");
     ui->BookTableView->setModel(userTable);
-
+    //设置列宽
     ui->BookTableView->setFixedSize(451,531);
     ui->BookTableView->setColumnWidth(0, 171);
     ui->BookTableView->setColumnWidth(1, 120);

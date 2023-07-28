@@ -9,6 +9,7 @@ ChangePassword::ChangePassword(int id,QString password,QWidget *parent) :
     this->show();
     this->setFixedSize(432,316);
     this->setWindowTitle("修改密码");
+    //设置为密码格式
     ui->changeAgainLineEdit->setEchoMode(QLineEdit::Password);
     ui->changeLineEdit->setEchoMode(QLineEdit::Password);
     connect(ui->sureButton,&QPushButton::clicked,this,&ChangePassword::sureButtonClicked);
@@ -41,6 +42,7 @@ void ChangePassword::sureButtonClicked()
         ui->changeLineEdit->clear();
         return;
     }
+    //如果密码输入无误，就进行更新
     query->prepare("update stu set password=:password where id=:id");
     query->bindValue(":password",ui->changeAgainLineEdit->text());
     query->bindValue(":id",id);
